@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boulevard Blanc le retour</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>  
+    <div id="wrapper" class="js-wrapper">
+        <form action="">
+            <input type="hidden" id='hidden_token'>
+        </form>
+        <span class="game_title">Qui écoute ce banger ?</span>
+        <div class="settings_panel js-settings">
+            <button class="button_back js-hide-settings">Retour</button>
+            <div class="settings_panel__box">
+                <div class="settings_panel__line">
+                    <label class="settings_panel__label" for="tracksAmount">Nombre de morceaux par partie</label>
+                    <input class="settings_panel__number js-nb-tracks" type="number" id="tracksAmount" min="1" value="40"/>
+                    <span class="settings_panel__description">Valeur par défaut : 40.</span>
+                </div>
+                <!-- <div class="settings_panel__line">
+                    <label class="settings_panel__label" for="optionsAmount">Nombre de réponses proposées (min. 4)</label>
+                    <input class="settings_panel__number js-nb-options" type="number" id="optionsAmount" min="4" value="4"/>
+                    <span class="settings_panel__description">+1 point par option supplémentaire pour chaque bonne réponse.<br/>Valeur par défaut : 4.</span>
+                </div> -->
+                <div class="settings_panel__line">
+                    <label class="settings_panel__label settings_panel__label--full">Niveau de difficulté</label>
+                    <div class="settings_difficulty__row">
+                        <div class="settings_difficulty__inputs">
+                            <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--1 js-input-difficulty" name="difficultyLevel" id="difficultyLevel1" value="1" checked/>
+                            <label class="default_transition" for="difficultyLevel1"></label>
+                            <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--2 js-input-difficulty" name="difficultyLevel" id="difficultyLevel2" value="2"/>
+                            <label class="default_transition" for="difficultyLevel2"></label>
+                            <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--3 js-input-difficulty" name="difficultyLevel" id="difficultyLevel3" value="3"/>
+                            <label class="default_transition" for="difficultyLevel3"></label>
+                            <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--4 js-input-difficulty" name="difficultyLevel" id="difficultyLevel4" value="4"/>
+                            <label class="default_transition" for="difficultyLevel4"></label>
+                        </div>
+                        <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-1 visible">
+                            <span class="settings_panel__label settings_difficulty__title settings_difficulty__title--1">Normal</span>
+                            <ul class="settings_panel__description settings_difficulty__description">
+                                <li><span>Les extraits durent <b><u>30 secondes</u></b></span></li>
+                                <li><span>Les extraits <b><u>commencent au début</u></b></span></li>
+                                <li><span>Les extraits <b><u>bouclent</u></b></span></li>
+                                <li><span>Les informations des morceaux sont <b><u>affichées</u></b></span></li>
+                                <li><span><b><u>4 propositions</u></b> de réponses</span></li>
+                                <li><span>Les propositions sont sous forme <b><u>textuelle</u></b></span></li>
+                                <li><span>Multiplicateur : <b><u>x1</u></b></span></li>
+                            </ul>
+                        </div>
+                        <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-2">
+                            <span class="settings_panel__label settings_difficulty__title settings_difficulty__title--2">Difficile</span>
+                            <ul class="settings_panel__description settings_difficulty__description">
+                                <li><span>Les extraits durent <b><u>30 secondes</u></b></span></li>
+                                <li><span>Les extraits <b><u>commencent au début</u></b></span></li>
+                                <li><span>Les extraits <b><u>ne bouclent pas</u></b></span></li>
+                                <li><span>Les informations des morceaux sont <b><u>cachées</u></b></span></li>
+                                <li><span><b><u>4 propositions</u></b> de réponses</span></li>
+                                <li><span>Les propositions sont sous forme <b><u>textuelle</u></b></span></li>
+                                <li><span>Multiplicateur : <b><u>x2</u></b></span></li>
+                            </ul>
+                        </div>
+                        <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-3">
+                            <span class="settings_panel__label settings_difficulty__title settings_difficulty__title--3">Infernal</span>
+                            <ul class="settings_panel__description settings_difficulty__description">
+                                <li><span>Les extraits durent <b><u>5 secondes</u></b></span></li>
+                                <li><span>La portion jouée de chaque extrait est <b><u>aléatoire</u></b></span></li>
+                                <li><span>Les extraits <b><u>ne bouclent pas</u></b></span></li>
+                                <li><span>Les informations des morceaux sont <b><u>cachées</u></b></span></li>
+                                <li><span><b><u>4 propositions</u></b> de réponses</span></li>
+                                <li><span>Les propositions sont sous forme <b><u>textuelle</u></b></span></li>
+                                <li><span>Multiplicateur : <b><u>x3</u></b></span></li>
+                            </ul>
+                        </div>
+                        <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-4">
+                            <span class="settings_panel__label settings_difficulty__title settings_difficulty__title--4">Extrême</span>
+                            <ul class="settings_panel__description settings_difficulty__description">
+                                <li><span>Les extraits durent <b><u>5 secondes</u></b></span></li>
+                                <li><span>La portion jouée de chaque extrait est <b><u>aléatoire</u></b></span></li>
+                                <li><span>Les extraits <b><u>ne bouclent pas</u></b></span></li>
+                                <li><span>Les informations des morceaux sont <b><u>cachées</u></b></span></li>
+                                <li><span><b><u>6 propositions</u></b> de réponses</span></li>
+                                <li><span>Les propositions sont sous forme d'<b><u>avatars</u></b></span></li>
+                                <li><span>Multiplicateur : <b><u>x4</u></b></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="start_game js-play-track">Lancer la partie</button>
+        </div>
+        <div class="buttons_wrapper visible js-buttons-wrapper">
+            <button class="start_game js-play-track">Partie rapide</button>
+            <button class="start_game js-show-settings">Partie personnalisée</button>
+        </div>
+        <div class="end_game">
+            <span class="end_game__title">Jeu terminé</span>
+            <div class="end_game__score_wrapper">
+                <span class="end_game__score"><span class="end_game__label">Score</span><span class="end_game__value js-score"></span></span>
+                <span class="end_game__score"><span class="end_game__label">Rang</span><span class="end_game__value js-rank"></span></span>
+            </div>
+            <span class="end_game__message js-message"></span>
+            <!-- <span class="end_game__not_enough js-not-enough">Il va falloir faire mieux que ça.</span> -->
+            <button class="replay_game js-replay-game">Rejouer</button>
+            <button class="back_to_menu js-back-menu">Retour au menu</button>
+        </div>
+        <audio id="audio_player" class="audio_player js-audio-player" src=""></audio>
+        <span class="score_wrapper js-score-wrapper">
+            <span class="score_aside">Multiplicateur :<span class="score_display score_display--aside js-multiplicator">1</span></span>
+            <span class="score_main">Score :<span class="score_display js-score"></span></span>
+            <span class="score_aside">Bonus de chaîne :<span class="score_display score_display--aside js-streak">0</span></span>
+        </span>
+        <div class="game_display">
+            <div class="track_display__wrapper">
+                <button class="button_back button_quit js-quit-game">Quitter</button>
+                <div class="track_display">
+                    <div class="track_display__half track_display__half--cover js-track-cover">
+                        <img class="track_display__cover js-cover" src=""/>
+                    </div>
+                    <div class="track_display__details track_display__half track_display__half--details">
+                        <div class="track_display__content">
+                            <div class="track_display__name js-name"></div>
+                            <div class="track_display__artist js-artist"></div>
+                        </div>
+                        <div class="track_display__sidebar">
+                            <span class="track_display__number js-track-number"></span>
+                            <button class="track_display__like js-like-track" data-liked="false">
+                                <span class="track_display__like_legend default_transition" data-liked="true">Unliker ce morceau</span>
+                                <span class="track_display__like_legend default_transition" data-liked="false">Liker ce morceau</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ul class="list_answers js-answers"></ul>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js" type="text/javascript"></script>
+</body>
+</html>

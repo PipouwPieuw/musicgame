@@ -3,8 +3,8 @@ const SUPABASE_URL = 'https://ggunnirdsnplfaytkcff.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdndW5uaXJkc25wbGZheXRrY2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA0NDI2NjgsImV4cCI6MjAzNjAxODY2OH0.mZpr2HTGVEWs_xt47Ffk80zAwpJWp-1Hu6iR96OJYUw';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-var USERNAME = 'palapouette';
-var USERKEY = 'tartempion';
+var USERNAME = window.localStorage.getItem("username") || '';
+var USERKEY = window.localStorage.getItem("userkey") || '';
 
 const APIController = (function() {
     const nip = String.fromCharCode(56, 54, 100, 100, 102, 98, 49, 51, 55, 49, 102, 52, 52, 48, 50, 56, 56, 52, 56, 54, 102, 100, 56, 54, 100, 53, 53, 53, 51, 98, 54, 98);
@@ -121,9 +121,6 @@ const APPController = (function(UICtrl, APICtrl) {
     var minScore = 0;
     // Player data
     var playerData = {};
-    getPlayerData().then(function(result) {
-        playerData = result;
-    });
 
     function buildSetlist() {
 
@@ -201,13 +198,20 @@ const APPController = (function(UICtrl, APICtrl) {
 	            console.log(tracks.items.indexOf(track) + 1);
 	            console.log(track.track.preview_url);
 	            console.log(track.track.id);
-	            console.log('----------');
+                console.log('----------');
 	        }
 	    }
         // buildSetlist();
         /*console.log(tracks);*/
-        // totalTracks = tracks.total;
-        $('#wrapper').addClass('initialized');
+        // totalTracks = tracks.total;        
+        getPlayerData().then(function(result) {
+            if(result.id != null) {
+                playerData = result;
+                $('.js-settings').addClass('visible');
+                $('.js-login').removeClass('visible');
+            }
+            $('#wrapper').addClass('initialized');
+        });
     }
 
     // DOMInputs.playTrackButton.addEventListener('click', async (e) => {
@@ -231,26 +235,29 @@ const APPController = (function(UICtrl, APICtrl) {
 
     $('.js-back-menu').on('click', function() {
         quitGame();
-        $('.js-buttons-wrapper').addClass('visible');
+        // $('.js-buttons-wrapper').addClass('visible');
+        $('.js-wrapper').removeClass('game_started');
+        $('.js-settings').addClass('visible');
     });
 
     // Show settings
-    $('.js-show-settings').on('click', function() {
-        $('.js-settings').addClass('visible');
-        $('.js-buttons-wrapper').removeClass('visible');
-    });
+    // $('.js-show-settings').on('click', function() {
+    //     $('.js-settings').addClass('visible');
+    //     $('.js-buttons-wrapper').removeClass('visible');
+    // });
     // Hide settings
-    $('.js-hide-settings').on('click', function() {
-        $('.js-settings').removeClass('visible');
-        $('.js-buttons-wrapper').addClass('visible');
-    });
+    // $('.js-hide-settings').on('click', function() {
+    //     $('.js-settings').removeClass('visible');
+    //     $('.js-buttons-wrapper').addClass('visible');
+    // });
     // Quit game
     $('.js-quit-game').on('click', function() {
         isPlaying = false;
         audioPlayer.pause();
         quitGame();
         $('.js-wrapper').removeClass('game_started');
-        $('.js-buttons-wrapper').addClass('visible');
+        $('.js-settings').addClass('visible');
+        // $('.js-buttons-wrapper').addClass('visible');
     });
 
     // Set amount of tracks by game
@@ -397,9 +404,7 @@ const APPController = (function(UICtrl, APICtrl) {
                 updateAssignedTracks(name, currentTrack);
             playSound(soundWrong);
             that.addClass('incorrect');
-            streak = 0;
-            streakBonus = 0;
-            $('.js-streak').text(streakBonus);
+            resetStreak();
         }
         nextTrack();
     });
@@ -428,6 +433,23 @@ const APPController = (function(UICtrl, APICtrl) {
         else if(isPlaying) {
           audioPlayer.play();
         }
+    });
+
+    $('.js-login-button').on('click', function() {
+        USERNAME = $('.js-username').val();
+        USERKEY = $('.js-userkey').val();        
+        getPlayerData().then(function(result) {
+            if(result.id != null) {
+                playerData = result;
+                window.localStorage.setItem("username", USERNAME);
+                window.localStorage.setItem("userkey", USERKEY);
+                $('.js-settings').addClass('visible');
+                $('.js-login').removeClass('visible');
+            }
+            else {
+                alert('WRONG');
+            }
+        });
     });
 
     function playSound(soundElem) {
@@ -477,37 +499,23 @@ const APPController = (function(UICtrl, APICtrl) {
     }
 
     // function getRank(score) {
-    //     if(score < setListLength / 8 ) // < 5
-    //         return ["Déserteur", "Il vaut mieux être triste qu'à perte."];
-    //     else if(score < setListLength / 4) // < 10
-    //         return ["Client Maladroit", "\"Dites, je crois que je viens de dépublier ma homepage.\""];
-    //     else if(score < setListLength / 2 - setListLength / 8) // < 15
-    //         return ["Développeur Wordpress", "Pourquoi faire de la qualité quand on peut faire du Wordpress ?"];
-    //     else if(score < setListLength / 2) // < 20
-    //         return ["Vapoteur Clandestin", "Pour information les zones vertes c'est le couloir et la salle de réunion."];
-    //     else if(score < setListLength / 2 + setListLength / 8) // < 25
-    //         return ["Afficionado du télétravail", "C'est bien, mais il faudrait penser à passer au bureau de temps en temps."];
-    //     else if(score < setListLength - setListLength / 4) // < 30
-    //         return ["Collègue débonnaire", "Parce que notre propre bonheur commence avec celui des autres."];
-    //     else if(score < setListLength - setListLength / 5) // < 32
-    //         return ["Pull en preprod", "Encore un petit effort et on sera bons pour le passage en prod."];
-    //     else if(score < setListLength - setListLength / 20) // < 38
-    //         return ["Happiness Manager", "Félicitations, c'est une victoire bien méritée."];
-    //     else if(score < setListLength) // < 40
-    //         return ["Mise en ligne un vendredi sans accrocs", "D'aucuns diront que c'est un miracle."];
-    //     else if(score == setListLength) // = 40
-    //         return ["Manifestation Divine", "Les astres chantent les louanges du propriétaire de ce score parfait."];
-    //     else
-    //         return ["", ""];
     // }
+
+    function resetStreak() {
+        streak = 0;
+        streakBonus = 0;
+        $('.js-streak').text(streakBonus);
+    }
 
     function resetGame() {        
         quitGame();
         buildSetlist();
     }
+
     function quitGame() {        
         score = 0;
         updateScore(score);
+        resetStreak();
         setList = [];
         setListLength = 0;
         tracksIndexes = [];

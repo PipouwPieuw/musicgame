@@ -65,34 +65,66 @@ button,
 .audio_player {
 	display: none;
 }
-.game_title {
+.bar_top {
 	position: absolute;
 	z-index: 1;
 	top: 0;
 	left: 0;
 	right: 0;
 	height: 90px;
-	padding: 0 100px;
+	padding-left: 90px;
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	font-size: 40px;
-	font-weight: 700;
+	justify-content: space-between;
 	background: black;
 	color: white;
 }
+.bar_top:not(.visible) {
+	display: none;
+}
 @media only screen and (max-width: 640px) {	
-	.game_title {
+	.bar_top {
+		height: 50px;
+	}
+}
+
+.bar_top__title {
+	font-size: 40px;
+	font-weight: 700;
+	flex: 1;
+	text-align: center;
+}
+@media only screen and (max-width: 640px) {	
+	.bar_top__title {
 		font-size: 20px;
 		height: 50px;
 		padding: 0 60px;
 	}
 }
 @media only screen and (max-width: 350px) {
-	.game_title {
+	.bar_top__title {
 		font-size: 18px;
 	}
 }
+.bar_top__logout {
+	background: transparent;
+	border: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 90px;
+	height: 90px;
+}
+.bar_top__logout:hover {
+	background: red;
+}
+
+.bar_top__icon {
+	width: 50px;
+	height: auto;
+}
+
 .buttons_wrapper {
 	display: flex;
 	flex-direction: column;
@@ -346,6 +378,12 @@ button,
 	height: 100%;
 	object-fit: cover;
 }
+.track_display__countdown {
+	font-display: 16px;
+}
+.track_display__countdown.hidden {
+	display: none;
+}
 .track_display__details {
 	display: flex;
 /*	flex-direction: column;*/
@@ -549,7 +587,7 @@ button,
 .settings_panel {
 	display: flex;
 	flex-direction: column;
-	gap: 15px;
+	gap: 20px;
 }
 .panel_box:not(.visible) {
 	display: none;
@@ -581,13 +619,18 @@ button,
 	font-size: 20px;
 	font-weight: 700;
 }
+.settings_panel__label_wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 .settings_panel__label--full {
 	flex: 0 0 100%;
 	margin-bottom: 15px;
 }
 .settings_panel__description {
 	flex: 0 0 100%;
-	margin-top: 8px;
+/*	margin-top: 8px;*/
     font-size: 16px;
     line-height: 20px;
     width: 100%;
@@ -595,7 +638,7 @@ button,
 }
 .panel_input {
 	height: 40px;
-	width: 100px;
+	width: 120px;
 	border: 2px solid black;
 	border-radius: var(--radius);
 	font-size: 24px;
@@ -614,6 +657,7 @@ button,
 	flex: 0 0 120px;
 	display: flex;
 	flex-direction: column;
+	align-items: flex-end;
 	gap: 5px;
 }
 .settings_difficulty__radio {

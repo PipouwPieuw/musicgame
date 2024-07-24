@@ -83,6 +83,7 @@ const APPController = (function(UICtrl, APICtrl) {
     var ANSWERSAMOUNT = 4;
     var DIFFICULTYLEVEL = 1;
     var DISPLAYTRACKSINFOS = true;
+    var DEFAULTTRACKDURATION = 30;
     var HARDCOREMODETRACKDURATION = 5;
     var TRACKSTART = 0;
     var DISPLAYAVATARS = false;
@@ -208,6 +209,7 @@ const APPController = (function(UICtrl, APICtrl) {
             if(result.id != null) {
                 playerData = result;
                 $('.js-settings').addClass('visible');
+                $('.js-bar-top').addClass('visible');
                 $('.js-login').removeClass('visible');
             }
             $('#wrapper').addClass('initialized');
@@ -371,6 +373,8 @@ const APPController = (function(UICtrl, APICtrl) {
                 answerElem = $('<li class="list_answers__item"><button class="list_answers__name js-answer" data-index="' + i + '">' + answers[i][0] + '</button></li>');
             $('.js-answers').append(answerElem);
         }
+        // Countdown
+        $('.js-countdown').text(DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION);
         // Play track
         if(DIFFICULTYLEVEL > 2) {
             TRACKSTART = Math.floor(Math.random() * 24 - 0 + 1);
@@ -422,7 +426,9 @@ const APPController = (function(UICtrl, APICtrl) {
     });
 
     jsAudioPlayer.on('timeupdate', function(event) {
-        if(DIFFICULTYLEVEL > 2 && audioPlayer.currentTime >= TRACKSTART + HARDCOREMODETRACKDURATION) {
+        if((DIFFICULTYLEVEL > 2  && audioPlayer.currentTime >= TRACKSTART + HARDCOREMODETRACKDURATION)
+         || DIFFICULTYLEVEL <= 2 && audioPlayer.currentTime >= audioPlayer.duration) {
+            $('.js-countdown').text(0);
             isPlaying = false;
             audioPlayer.pause();
             audioPlayer.currentTime = 0;
@@ -431,26 +437,54 @@ const APPController = (function(UICtrl, APICtrl) {
             nextTrack();
         }
         else if(isPlaying) {
-          audioPlayer.play();
+            $('.js-countdown').text(DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - Math.floor(audioPlayer.currentTime) : TRACKSTART + HARDCOREMODETRACKDURATION - Math.floor(audioPlayer.currentTime));
+            audioPlayer.play();
         }
     });
 
     $('.js-login-button').on('click', function() {
-        USERNAME = $('.js-username').val();
-        USERKEY = $('.js-userkey').val();        
+        login();
+    });
+
+    $('.js-username, .js-userkey').on('keyup', function(e) {
+        if(e.which == 13) {
+            login();
+        }
+    });
+
+    $('.js-logout-button').on('click', function() {
+        logout();
+    });
+
+    function login() {
+        USERNAME = $('.js-username').val().toLowerCase();
+        USERKEY = $('.js-userkey').val().toLowerCase();
         getPlayerData().then(function(result) {
             if(result.id != null) {
                 playerData = result;
                 window.localStorage.setItem("username", USERNAME);
                 window.localStorage.setItem("userkey", USERKEY);
+                $('.js-username').val('');
+                $('.js-userkey').val('');
                 $('.js-settings').addClass('visible');
+                $('.js-bar-top').addClass('visible');
                 $('.js-login').removeClass('visible');
             }
             else {
                 alert('WRONG');
             }
         });
-    });
+    }
+
+    function logout() {
+        USERNAME = '';
+        USERKEY = ''; 
+        window.localStorage.removeItem("username");
+        window.localStorage.removeItem("userkey");
+        $('.js-settings').removeClass('visible');
+        $('.js-bar-top').removeClass('visible');
+        $('.js-login').addClass('visible');
+    }
 
     function playSound(soundElem) {
         soundElem.currentTime = 0;

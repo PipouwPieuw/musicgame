@@ -207,7 +207,10 @@ const APPController = (function(UICtrl, APICtrl) {
         // totalTracks = tracks.total;        
         getPlayerData().then(function(result) {
             if(result.id != null) {
-                playerData = result;
+                playerData = result;                
+                getScores().then(function(result) {
+                    playerData.scores = result[0].scores;
+                });
                 $('.js-settings').addClass('visible');
                 $('.js-bar-top').addClass('visible');
                 $('.js-login').removeClass('visible');
@@ -456,6 +459,58 @@ const APPController = (function(UICtrl, APICtrl) {
         logout();
     });
 
+    $('.js-display-leaderboard').on('click', function() {
+
+        if($(this).hasClass('active')) {
+            closeLeaderboard();
+            return;
+        }
+
+        getAllScores().then(function(result) {
+            var leaderboard = {}
+            for(var difficulty in DIFFICULTYNAMES) {
+                leaderboard[DIFFICULTYNAMES[difficulty]]= [];
+            }
+            for(var element in result) {
+                var scores = result[element].scores;
+                if(scores == null)
+                    continue;
+                var name = result[element].name;
+                for(var score in scores) {
+                    var [difficulty, tracks, points] = scores[score];
+                    leaderboard[difficulty].push([name, tracks, points]);
+                }
+            }
+            var counter = 0;
+            for(var difficulty in DIFFICULTYNAMES) {
+                counter += 1;
+                var label = DIFFICULTYNAMES[difficulty];
+                $('.js-leaderboard-content').append('<span class="leaderboard__title leaderboard__title--' + counter + ' panel_label">' + label + '</span>');
+                leaderboard[label].sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
+                var scoresList = $('<ul class="leaderboard__list"></ul>');
+                scoresList.append($('<li class="leaderboard__item"><span class="leaderboard__value--head leaderboard__value--name">Joueur</span><span class="leaderboard__value--head leaderboard__value--tracks">Nombre de morceaux</span><span class="leaderboard__value--head leaderboard__value--points">Score</span></li>'));
+                var i = 0;
+                for(var score in leaderboard[label]) {
+                    i +=1;
+                    if(i > 20)
+                        break;
+                    var [name, tracks, points] = leaderboard[label][score];
+                    var scoresItem = $('<li class="leaderboard__item"></li>')
+                    scoresItem.append($('<span class="leaderboard__value leaderboard__value--name">' + name + '</span>'));
+                    scoresItem.append($('<span class="leaderboard__value leaderboard__value--tracks">' + tracks + '</span>'));
+                    scoresItem.append($('<span class="leaderboard__value leaderboard__value--points">' + points + '</span>'));
+                    scoresList.append(scoresItem);
+                }
+                $('.js-leaderboard-content').append(scoresList);
+            }
+            openLeaderboard();
+        });
+    });
+
+    $('.js-close-leaderboard').on('click', function() {
+        closeLeaderboard();
+    });
+
     function login() {
         USERNAME = $('.js-username').val().toLowerCase();
         USERKEY = $('.js-userkey').val().toLowerCase();
@@ -481,6 +536,7 @@ const APPController = (function(UICtrl, APICtrl) {
         USERKEY = ''; 
         window.localStorage.removeItem("username");
         window.localStorage.removeItem("userkey");
+        closeLeaderboard();
         $('.js-settings').removeClass('visible');
         $('.js-bar-top').removeClass('visible');
         $('.js-login').addClass('visible');
@@ -532,9 +588,6 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-score').text(score);
     }
 
-    // function getRank(score) {
-    // }
-
     function resetStreak() {
         streak = 0;
         streakBonus = 0;
@@ -557,6 +610,19 @@ const APPController = (function(UICtrl, APICtrl) {
         playersDataBuild = JSON.parse(JSON.stringify(playersData));
         $('.js-wrapper').removeClass('game_ended');
         $('.js-score-wrapper').removeClass('visible');
+    }
+
+    function openLeaderboard() {
+        $('.js-settings').removeClass('visible');
+        $('.js-leaderboard').addClass('visible');
+        $('.js-display-leaderboard').addClass('active');
+    }
+
+    function closeLeaderboard() {
+        $('.js-settings').addClass('visible');
+        $('.js-leaderboard').removeClass('visible');
+        $('.js-display-leaderboard').removeClass('active');
+        $('.js-leaderboard-content').empty();
     }
 
     return {
@@ -582,11 +648,9 @@ async function getGameData() {
 }
 
 async function getPlayerData() {
-    const { data, error } = await _supabase.rpc('get_profile', {current_user_name: USERNAME, current_user_key: USERKEY});
+    var { data, error } = await _supabase.rpc('get_profile', {current_user_name: USERNAME, current_user_key: USERKEY});
     if(data.likedTracks == null)
         data.likedTracks = [];
-    if(data.scores == null)
-        data.scores = [];
     return data;
 }
 
@@ -600,12 +664,34 @@ async function updateLikedTracks(likedTracks) {
         console.log(error);
 }
 
+async function getScores() {
+    const { data, error } = await _supabase
+        .from("scores")
+        .select('scores')
+        .eq('name', USERNAME);
+    if(error != null)
+        console.log(error);
+    if(data == null)
+        data = [];
+    return data;
+}
+
+async function getAllScores() {
+    const { data, error } = await _supabase
+        .from("scores")
+        .select('*');
+    if(error != null)
+        console.log(error);
+    if(data == null)
+        data = [];
+    return data;
+}
+
 async function updateScores(scores) {
     const { error } = await _supabase
-        .from("profiles")
+        .from("scores")
         .update({ 'scores': scores })
-        .eq('username', USERNAME)
-        .eq('userkey', USERKEY);
+        .eq('name', USERNAME);
     if(error != null)
         console.log(error);
 }

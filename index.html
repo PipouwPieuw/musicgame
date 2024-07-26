@@ -15,9 +15,12 @@
             <input type="hidden" id='hidden_token'>
         </form>
         <div class="bar_top js-bar-top">
-            <span class="bar_top__title">Qui écoute ce banger ?</span>
             <button class="bar_top__logout js-logout-button" aria-label="Déconnexion" title="Déconnexion">
                 <img class="bar_top__icon" src="assets/logout.svg"/>
+            </button>
+            <span class="bar_top__title">Qui écoute ce banger ?</span>
+            <button class="bar_top__leaderboard js-display-leaderboard" aria-label="Afficher les scores" title="Leaderboard">
+                <img class="bar_top__icon" src="assets/trophy.svg"/>
             </button>
         </div>
         <div class="login_panel panel_box visible js-login">
@@ -149,6 +152,10 @@
                 </div>
             </div>
             <ul class="list_answers js-answers"></ul>
+        </div>
+        <div class="leaderboard js-leaderboard">            
+            <button class="button_back button_default leaderboard_close js-close-leaderboard">Retour</button>
+            <div class="js-leaderboard-content"></div>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

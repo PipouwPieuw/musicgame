@@ -38,7 +38,7 @@
                         <label class="settings_panel__label panel_label" for="tracksAmount">Nombre de morceaux par partie</label>
                         <span class="settings_panel__description">Valeur par défaut : 40.</span>
                     </div>
-                    <input class="settings_panel__number panel_input js-nb-tracks" type="number" id="tracksAmount" min="1" value="40"/>
+                    <input class="settings_panel__number panel_input js-nb-tracks" type="number" id="tracksAmount" min="1" max="1000" value="40"/>
                 </div>
                 <!-- <div class="settings_panel__line">
                     <label class="settings_panel__label" for="optionsAmount">Nombre de réponses proposées (min. 4)</label>
@@ -124,13 +124,18 @@
         </div>
         <audio id="audio_player" class="audio_player js-audio-player" src=""></audio>
         <span class="score_wrapper js-score-wrapper">
-            <span class="score_aside">Multiplicateur :<span class="score_display score_display--aside js-multiplicator">1</span></span>
+            <span class="score_aside"></span>
             <span class="score_main">Score :<span class="score_display js-score"></span></span>
-            <span class="score_aside">Bonus de chaîne :<span class="score_display score_display--aside js-streak">0</span></span>
+            <span class="score_aside">+<span class="score_display score_display--aside js-streak">0</span> x<span class="score_display score_display--aside js-multiplicator">1</span></span>
         </span>
         <div class="game_display">
             <div class="track_display__wrapper">
-                <button class="button_back button_default button_quit js-quit-game">Quitter</button>
+                <div class="track_display__top">
+                    <button class="button_back button_default button_quit js-quit-game">Quitter</button>
+                    <div class="track_display__tracks_counter">
+                        <span class="track_display__number js-track-number">0</span>/<span class="track_display__total js-track-total">40</span>
+                    </div>
+                </div>
                 <div class="track_display">
                     <div class="track_display__half track_display__half--cover js-track-cover">
                         <img class="track_display__cover js-cover" src=""/>
@@ -141,8 +146,7 @@
                             <div class="track_display__artist js-artist"></div>
                         </div>
                         <div class="track_display__sidebar">
-                            <!-- <span class="track_display__number js-track-number"></span> -->
-                            <span class="track_display__number js-countdown"></span>
+                            <span class="track_display__countdown js-countdown"></span>
                             <button class="track_display__like js-like-track" data-liked="false">
                                 <span class="track_display__like_legend default_transition" data-liked="true">Unliker ce morceau</span>
                                 <span class="track_display__like_legend default_transition" data-liked="false">Liker ce morceau</span>
@@ -155,6 +159,7 @@
         </div>
         <div class="leaderboard js-leaderboard">            
             <button class="button_back button_default leaderboard_close js-close-leaderboard">Retour</button>
+            <div class="leaderboard__heading">Tableaux des scores</div>
             <div class="js-leaderboard-content"></div>
         </div>
     </div>

@@ -271,6 +271,7 @@ const APPController = (function(UICtrl, APICtrl) {
             $(this).val($(this).attr('min'));
         TRACKSBYGAME = +$(this).val();
         tracksByPlayer = Math.floor(TRACKSBYGAME / playersData.length);
+        $('.js-track-total').text(TRACKSBYGAME);
     });
 
     // Set amount of options by game
@@ -383,6 +384,7 @@ const APPController = (function(UICtrl, APICtrl) {
             TRACKSTART = Math.floor(Math.random() * 24 - 0 + 1);
             audioPlayer.currentTime = TRACKSTART;
         }
+        window.requestAnimationFrame(audioCountdown);
         audioPlayer.play();
         isPlaying = true;        
         $('.js-answers').addClass('playing');
@@ -440,10 +442,18 @@ const APPController = (function(UICtrl, APICtrl) {
             nextTrack();
         }
         else if(isPlaying) {
-            $('.js-countdown').text(DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - Math.floor(audioPlayer.currentTime) : TRACKSTART + HARDCOREMODETRACKDURATION - Math.floor(audioPlayer.currentTime));
+            // $('.js-countdown').text(DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - Math.floor(audioPlayer.currentTime) : TRACKSTART + HARDCOREMODETRACKDURATION - Math.floor(audioPlayer.currentTime));
             audioPlayer.play();
         }
     });
+
+    function audioCountdown() {
+        var timer = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - Math.floor(audioPlayer.currentTime) : TRACKSTART + HARDCOREMODETRACKDURATION - Math.floor(audioPlayer.currentTime);
+        $('.js-countdown').text(timer);
+        if(timer == 0)
+            return;
+        window.requestAnimationFrame(audioCountdown);
+    };
 
     $('.js-login-button').on('click', function() {
         login();

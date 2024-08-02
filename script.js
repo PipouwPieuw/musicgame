@@ -307,7 +307,7 @@ const APPController = (function(UICtrl, APICtrl) {
         DISPLAYAVATARS = DIFFICULTYLEVEL > 3;
 
         // Answers amount
-        ANSWERSAMOUNT = DIFFICULTYLEVEL > 3 ? 6 : 4;
+        ANSWERSAMOUNT = DIFFICULTYLEVEL > 3 ? 8 : 4;
     });
 
     const playTrack = async () => {

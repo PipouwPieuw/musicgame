@@ -588,7 +588,7 @@ button,
 
 	.list_answers__item--avatar {
 		padding: 0;
-		flex: 0 0 calc((100% - 10px) / 3);
+		flex: 0 0 calc((100% - 15px) / 4);
 	}
 }
 .list_answers__img {
@@ -718,7 +718,7 @@ button,
 	font-weight: 700;
 }
 @media only screen and (max-width: 640px) {
-	.panel_label:not(.leaderboard__title) {
+	.panel_label:not(.leaderboard__title):not(.settings_difficulty__title) {
 		font-size: 18px;
 	}
 }
@@ -865,6 +865,7 @@ button,
 }
 .settings_difficulty__title {
 	font-size: 26px;
+	margin-bottom: 6px;
 }
 .settings_difficulty__title--1,
 .leaderboard__title--1 {

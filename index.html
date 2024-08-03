@@ -18,8 +18,11 @@
             <button class="bar_top__logout js-logout-button" aria-label="Déconnexion" title="Déconnexion">
                 <img class="bar_top__icon" src="assets/logout.svg"/>
             </button>
+            <button class="bar_top__back js-quit-game">
+                <img class="bar_top__icon" src="assets/arrow-left.svg" aria-label="Quitter la partie" title="Quitter la partie"/>
+            </button>
             <span class="bar_top__title">Advency Sound System</span>
-            <button class="bar_top__leaderboard js-display-leaderboard" aria-label="Afficher les scores" title="Leaderboard">
+            <button class="bar_top__leaderboard js-display-leaderboard" aria-label="Afficher les scores" title="Hall of fame">
                 <img class="bar_top__icon" src="assets/trophy.svg"/>
             </button>
         </div>
@@ -92,7 +95,7 @@
                                     <li><span>Les extraits durent <b><u>5 secondes</u></b></span></li>
                                     <li><span>La portion jouée de chaque extrait est <b><u>aléatoire</u></b></span></li>
                                     <li><span>Les informations des morceaux sont <b><u>cachées</u></b></span></li>
-                                    <li><span><b><u>6 propositions</u></b> de réponses</span></li>
+                                    <li><span><b><u>8 propositions</u></b> de réponses</span></li>
                                     <li><span>Les propositions sont sous forme d'<b><u>avatars</u></b></span></li>
                                     <li><span>Multiplicateur : <b><u>x4</u></b></span></li>
                                 </ul>
@@ -136,12 +139,9 @@
         </span>
         <div class="game_display">
             <div class="track_display__wrapper">
-                <div class="track_display__top">
-                    <button class="button_back button_default button_quit js-quit-game">Quitter</button>
-                    <div class="track_display__tracks_counter">
-                        <span class="track_display__number js-track-number">0</span>/<span class="track_display__total js-track-total">40</span>
-                    </div>
-                </div>
+                <span class="panel_box__title panel_box__title--tracks">
+                    <span class="js-track-number">0</span>/<span class="js-track-total">40</span>
+                </span>
                 <div class="track_display">
                     <div class="track_display__half track_display__half--cover js-track-cover">
                         <img class="track_display__cover js-cover" src=""/>
@@ -163,10 +163,11 @@
             </div>
             <ul class="list_answers js-answers"></ul>
         </div>
-        <div class="leaderboard js-leaderboard">            
+        <div class="panel_box leaderboard js-leaderboard">            
             <button class="button_back button_default leaderboard_close js-close-leaderboard">Retour</button>
-            <div class="leaderboard__heading">Tableaux des scores</div>
-            <div class="js-leaderboard-content"></div>
+            <!-- <div class="leaderboard__heading">Tableaux des scores</div> -->
+            <span class="panel_box__title">Hall of fame</span>
+            <div class="panel_box__box js-leaderboard-content"></div>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

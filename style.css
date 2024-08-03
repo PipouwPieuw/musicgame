@@ -44,7 +44,10 @@ button,
 }
 @media only screen and (max-width: 640px) {
 	#wrapper {	
-		padding: 80px 10px 105px 10px;
+		padding: 65px 10px 105px 10px;
+	}
+	#wrapper.game_started {	
+		padding-top: 50px;
 	}
 }
 #wrapper:not(.initialized) {
@@ -84,9 +87,15 @@ button,
 .bar_top:not(.visible) {
 	display: none;
 }
+#wrapper.game_started .bar_top {
+	padding-right: 90px;
+}
 @media only screen and (max-width: 640px) {	
 	.bar_top {
 		height: 50px;
+	}
+	#wrapper.game_started .bar_top {
+		padding-right: 50px;
 	}
 }
 
@@ -108,7 +117,8 @@ button,
 	}
 }
 .bar_top__logout,
-.bar_top__leaderboard {
+.bar_top__leaderboard,
+.bar_top__back {
 	background: transparent;
 	border: 0;
 	padding: 0;
@@ -118,16 +128,23 @@ button,
 	width: 90px;
 	height: 90px;
 }
+#wrapper.game_started .bar_top__logout,
+#wrapper.game_started .bar_top__leaderboard,
+#wrapper:not(.game_started) .bar_top__back {
+	display: none;
+}
 @media only screen and (max-width: 640px) {
 	.bar_top__logout,
-	.bar_top__leaderboard {
+	.bar_top__leaderboard,
+	.bar_top__back {
 		width: 50px;
 	    height: 50px;
 	}
 }
 
 @media only screen and (min-width: 641px) {	
-	.bar_top__logout:hover {
+	.bar_top__logout:hover,
+	.bar_top__back:hover {
 		background: red;
 	}
 	.bar_top__leaderboard:hover {
@@ -299,7 +316,7 @@ button,
 	width: 100%;
 	display: flex;
 	border: 4px solid black;
-	border-radius: var(--radius);
+	border-radius: 0 var(--radius) var(--radius) var(--radius);
 }
 @media only screen and (max-width: 640px) {
 	.track_display {
@@ -332,15 +349,6 @@ button,
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-}
-.track_display__tracks_counter {
-	font-size: 24px;
-	font-weight: 700;
-}
-@media only screen and (max-width: 640px) {
-	.track_display__tracks_counter {
-		font-size: 16px;
-	}
 }
 .track_display__countdown {
 	width: 60px;
@@ -410,14 +418,6 @@ button,
 	}
 }
 @media only screen and (max-width: 640px) {
-	/*.track_display__number {
-		font-size: 20px;
-		width: 50px;
-		height: auto;
-		bottom: 0;
-		border-bottom: 0;
-		border-radius: 0;
-	}*/
 	.track_display__like_legend {
 		display: none;
 	}
@@ -684,6 +684,9 @@ button,
     background: black;
     color: white;
 }
+.panel_box__title--tracks {
+	font-size: 18px;
+}
 .panel_box__box {
 	width: 100%;
     border: 4px solid black;
@@ -933,9 +936,6 @@ button,
 	    color: white;
 	}
 }
-.button_quit {
-	margin-bottom: 15px;
-}
 
 .leaderboard {
 	text-align: left;
@@ -961,6 +961,8 @@ button,
 .leaderboard__list {
 	padding-top: 8px;
 /*	border-top: 1px solid black;*/
+}
+.leaderboard__list:not(:last-child) {
 	padding-bottom: 40px;
 }
 .leaderboard__item {

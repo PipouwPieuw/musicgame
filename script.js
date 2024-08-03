@@ -169,7 +169,8 @@ const APPController = (function(UICtrl, APICtrl) {
         if(SHUFFLE) {
             setList = shuffleArray(setList);
         }
-        setListLength = setList.length;
+        setListLength = setList.length;        
+        $('.js-track-total').text(setListLength);
         minScore = setListLength - setListLength / 5;
     }
 
@@ -271,7 +272,6 @@ const APPController = (function(UICtrl, APICtrl) {
             $(this).val($(this).attr('min'));
         TRACKSBYGAME = +$(this).val();
         tracksByPlayer = Math.floor(TRACKSBYGAME / playersData.length);
-        $('.js-track-total').text(TRACKSBYGAME);
     });
 
     // Set amount of options by game

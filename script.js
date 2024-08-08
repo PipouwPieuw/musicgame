@@ -438,7 +438,8 @@ const APPController = (function(UICtrl, APICtrl) {
             audioPlayer.pause();
             audioPlayer.currentTime = 0;
             $('.js-answers').removeClass('playing');
-            playSound(soundWrong);
+            playSound(soundWrong);            
+            resetStreak();
             nextTrack();
         }
         else if(isPlaying) {

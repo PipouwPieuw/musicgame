@@ -16,10 +16,10 @@
         </form>
         <div class="bar_top js-bar-top">
             <button class="bar_top__logout js-logout-button" aria-label="Déconnexion" title="Déconnexion">
-                <img class="bar_top__icon" src="assets/logout.svg"/>
+                <img class="bar_top__icon" src="assets/logout.svg"  role="decoration"/>
             </button>
-            <button class="bar_top__back js-quit-game">
-                <img class="bar_top__icon" src="assets/arrow-left.svg" aria-label="Quitter la partie" title="Quitter la partie"/>
+            <button class="bar_top__back js-quit-game" aria-label="Quitter la partie" title="Quitter la partie">
+                <img class="bar_top__icon" src="assets/arrow-left.svg" role="decoration"/>
             </button>
             <span class="bar_top__title">Advency Sound System</span>
             <button class="bar_top__leaderboard js-display-leaderboard" aria-label="Afficher les scores" title="Hall of fame">
@@ -55,9 +55,19 @@
                     </div> -->
                     <div class="settings_panel__line">
                         <label class="settings_panel__label settings_panel__label--full panel_label">Niveau de difficulté</label>
+                        <div class="settings_difficulty__inputs">
+                            <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--1 js-input-difficulty" name="difficultyLevel" id="difficultyLevel1" value="1" checked/>
+                            <label class="default_transition" for="difficultyLevel1"><span class="default_transition">Normal</span></label>
+                            <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--2 js-input-difficulty" name="difficultyLevel" id="difficultyLevel2" value="2"/>
+                            <label class="default_transition" for="difficultyLevel2"><span class="default_transition">Difficile</span></label>
+                            <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--3 js-input-difficulty" name="difficultyLevel" id="difficultyLevel3" value="3"/>
+                            <label class="default_transition" for="difficultyLevel3"><span class="default_transition">Infernal</span></label>
+                            <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--4 js-input-difficulty" name="difficultyLevel" id="difficultyLevel4" value="4"/>
+                            <label class="default_transition" for="difficultyLevel4"><span class="default_transition">Extrême</span></label>
+                        </div>
                         <div class="settings_difficulty__row">
                             <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-1 visible">
-                                <span class="settings_panel__label  panel_label settings_difficulty__title settings_difficulty__title--1">Normal</span>
+                                <!-- <span class="settings_panel__label  panel_label settings_difficulty__title settings_difficulty__title--1">Normal</span> -->
                                 <ul class="settings_panel__description settings_difficulty__description">
                                     <li><span>Les extraits durent <b><u>30 secondes</u></b></span></li>
                                     <li><span>Les extraits <b><u>commencent au début</u></b></span></li>
@@ -68,7 +78,7 @@
                                 </ul>
                             </div>
                             <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-2">
-                                <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--2">Difficile</span>
+                                <!-- <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--2">Difficile</span> -->
                                 <ul class="settings_panel__description settings_difficulty__description">
                                     <li><span>Les extraits durent <b><u>30 secondes</u></b></span></li>
                                     <li><span>Les extraits <b><u>commencent au début</u></b></span></li>
@@ -79,7 +89,7 @@
                                 </ul>
                             </div>
                             <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-3">
-                                <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--3">Infernal</span>
+                                <!-- <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--3">Infernal</span> -->
                                 <ul class="settings_panel__description settings_difficulty__description">
                                     <li><span>Les extraits durent <b><u>5 secondes</u></b></span></li>
                                     <li><span>La portion jouée de chaque extrait est <b><u>aléatoire</u></b></span></li>
@@ -90,7 +100,7 @@
                                 </ul>
                             </div>
                             <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-4">
-                                <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--4">Extrême</span>
+                                <!-- <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--4">Extrême</span> -->
                                 <ul class="settings_panel__description settings_difficulty__description">
                                     <li><span>Les extraits durent <b><u>5 secondes</u></b></span></li>
                                     <li><span>La portion jouée de chaque extrait est <b><u>aléatoire</u></b></span></li>
@@ -99,16 +109,6 @@
                                     <li><span>Les propositions sont sous forme d'<b><u>avatars</u></b></span></li>
                                     <li><span>Multiplicateur : <b><u>x4</u></b></span></li>
                                 </ul>
-                            </div>
-                            <div class="settings_difficulty__inputs">
-                                <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--1 js-input-difficulty" name="difficultyLevel" id="difficultyLevel1" value="1" checked/>
-                                <label class="default_transition" for="difficultyLevel1"></label>
-                                <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--2 js-input-difficulty" name="difficultyLevel" id="difficultyLevel2" value="2"/>
-                                <label class="default_transition" for="difficultyLevel2"></label>
-                                <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--3 js-input-difficulty" name="difficultyLevel" id="difficultyLevel3" value="3"/>
-                                <label class="default_transition" for="difficultyLevel3"></label>
-                                <input type="radio" class="settings_difficulty__radio settings_difficulty__radio--4 js-input-difficulty" name="difficultyLevel" id="difficultyLevel4" value="4"/>
-                                <label class="default_transition" for="difficultyLevel4"></label>
                             </div>
                         </div>
                     </div>
@@ -132,15 +132,21 @@
             <button class="back_to_menu js-back-menu">Retour au menu</button>
         </div>
         <audio id="audio_player" class="audio_player js-audio-player" src=""></audio>
-        <span class="score_wrapper js-score-wrapper">
-            <span class="score_aside"></span>
-            <span class="score_main">Score :<span class="score_display js-score"></span></span>
-            <span class="score_aside">+<span class="score_display score_display--aside js-streak">0</span> x<span class="score_display score_display--aside js-multiplicator">1</span></span>
-        </span>
-        <div class="game_display">
+        <div class="game_display">            
+            <span class="score_wrapper js-score-wrapper">
+                <!-- <span class="score_aside"><span class="score_display score_display--aside">x<span class="js-multiplicator">1</span></span></span> -->
+                <span class="score_main"><span class="js-score"></span></span>
+                <span class="score_main score_aside"><span class="js-streak">0</span></span>
+            </span>
             <div class="track_display__wrapper">
-                <span class="panel_box__title panel_box__title--tracks">
-                    <span class="js-track-number">0</span>/<span class="js-track-total">40</span>
+                <span class="game_top_bar">
+                    <div class="game_top_bar__tracks">
+                        <span class="js-track-number">0</span>/<span class="js-track-total">40</span>
+                    </div>
+                    <button class="track_display__like js-like-track" data-liked="false">
+                        <span class="track_display__like_legend default_transition" data-liked="true">Unliker ce morceau</span>
+                        <span class="track_display__like_legend default_transition" data-liked="false">Liker ce morceau</span>
+                    </button>
                 </span>
                 <div class="track_display">
                     <div class="track_display__half track_display__half--cover js-track-cover">
@@ -151,20 +157,24 @@
                             <div class="track_display__name js-name"></div>
                             <div class="track_display__artist js-artist"></div>
                         </div>
-                        <div class="track_display__sidebar">
-                            <span class="track_display__countdown js-countdown"></span>
-                            <button class="track_display__like js-like-track" data-liked="false">
-                                <span class="track_display__like_legend default_transition" data-liked="true">Unliker ce morceau</span>
-                                <span class="track_display__like_legend default_transition" data-liked="false">Liker ce morceau</span>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
             <ul class="list_answers js-answers"></ul>
+            <div class="bar_countdown__wrapper">
+                <div class="bar_countdown">
+                    <div class="bar_countdown__inner js-countdown-bar"></div>
+                </div>
+                <span class="track_display__countdown js-countdown"></span>
+            </div>
         </div>
         <div class="panel_box leaderboard js-leaderboard">            
-            <button class="button_back button_default leaderboard_close js-close-leaderboard">Retour</button>
+            <button class="button_back button_default leaderboard_close js-close-leaderboard">
+                <svg width="468" height="400" viewBox="0 0 468 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M224.237 9.76311C237.254 22.7806 237.254 43.8861 224.237 56.9036L114.474 166.667H434C452.409 166.667 467.333 181.59 467.333 200C467.333 218.409 452.409 233.333 434 233.333H114.474L224.237 343.096C237.254 356.114 237.254 377.219 224.237 390.237C211.219 403.254 190.114 403.254 177.096 390.237L10.4297 223.57C-2.58774 210.553 -2.58774 189.447 10.4297 176.43L177.096 9.76311C190.114 -3.25437 211.219 -3.25437 224.237 9.76311Z" fill="white"/>
+                </svg>
+                <span>Retour</span>
+            </button>
             <!-- <div class="leaderboard__heading">Tableaux des scores</div> -->
             <span class="panel_box__title">Hall of fame</span>
             <div class="panel_box__box js-leaderboard-content"></div>

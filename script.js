@@ -124,6 +124,7 @@ const APPController = (function(UICtrl, APICtrl) {
     var playerData = {};
 
     function buildSetlist() {
+        resetCountdownBar();
 
         if(SHUFFLE) {
             // Shuffle players tracks index
@@ -379,6 +380,7 @@ const APPController = (function(UICtrl, APICtrl) {
         }
         // Countdown
         $('.js-countdown').text(DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION);
+        startCountdownBar();
         // Play track
         if(DIFFICULTYLEVEL > 2) {
             TRACKSTART = Math.floor(Math.random() * 24 - 0 + 1);
@@ -399,6 +401,11 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-answers').removeClass('playing');
         var answerIndex = that.attr('data-index');
         var [name, result] = answers[answerIndex];
+        // Countdown
+        var currentDuration = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION;
+        var currentCoundtown = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - audioPlayer.currentTime : TRACKSTART + HARDCOREMODETRACKDURATION - audioPlayer.currentTime;
+        var countdownPercentage = currentCoundtown / currentDuration * 100;
+        resetCountdownBar(countdownPercentage + '%');
         if(result) {
             that.addClass('correct');
             playSound(soundRight);
@@ -443,7 +450,7 @@ const APPController = (function(UICtrl, APICtrl) {
             nextTrack();
         }
         else if(isPlaying) {
-            // $('.js-countdown').text(DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - Math.floor(audioPlayer.currentTime) : TRACKSTART + HARDCOREMODETRACKDURATION - Math.floor(audioPlayer.currentTime));
+            audioPlayer.volume = 0;
             audioPlayer.play();
         }
     });
@@ -453,7 +460,8 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-countdown').text(timer);
         if(timer == 0)
             return;
-        window.requestAnimationFrame(audioCountdown);
+        if(isPlaying)
+            window.requestAnimationFrame(audioCountdown);
     };
 
     $('.js-login-button').on('click', function() {
@@ -522,6 +530,18 @@ const APPController = (function(UICtrl, APICtrl) {
         closeLeaderboard();
     });
 
+    function resetCountdownBar(value = '100%') {
+        $('.js-countdown-bar').css('transition', 'all linear 0s');
+        $('.js-countdown-bar').css('width', value);
+    }
+
+    function startCountdownBar() {
+        setTimeout(function() {
+            $('.js-countdown-bar').css('transition', 'all linear ' + (DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION) + 's');
+            $('.js-countdown-bar').css('width', '0%');
+        }, 10);
+    }
+
     function login() {
         USERNAME = $('.js-username').val().toLowerCase();
         USERKEY = $('.js-userkey').val().toLowerCase();
@@ -560,8 +580,10 @@ const APPController = (function(UICtrl, APICtrl) {
 
     function nextTrack() {
         setTimeout(function() {
-            if(setList.length > 0)
+            if(setList.length > 0) {
+                resetCountdownBar();
                 playTrack();
+            }
             else 
                 endGame();
         }, 1000);

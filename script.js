@@ -411,9 +411,12 @@ const APPController = (function(UICtrl, APICtrl) {
             playSound(soundRight);
             streak += 1;
             streakBonus = streak - MINSTREAK >= 0 ? streak - MINSTREAK + 1 : 0;
-            score += (POINTSBYANSWER + streakBonus) * POINTSMULTIPLICATOR;
-            $('.js-streak').text(streakBonus);
-            updateScore();
+            var scoreIncrement = (POINTSBYANSWER + streakBonus) * POINTSMULTIPLICATOR;
+            score += scoreIncrement;
+            if(streakBonus > 0)
+                $('.js-streak-wrapper').addClass('active');
+            $('.js-streak').text(streakBonus > 0 ? streakBonus : '');
+            updateScore(scoreIncrement);
         }
         else {
             if(PRODMODE)
@@ -617,14 +620,27 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-track-number').text(playedTracks);
     }
 
-    function updateScore() {
+    function updateScore(increment = 0) {
         $('.js-score').text(score);
+        if(increment > 0) {
+            $('.js-score').parent().append($('<span class="score_increment">+' + increment + '</span>'));
+            setTimeout(function() {
+                $('.score_increment').addClass('animate');
+            }, 10);
+            setTimeout(function() {
+                $('.score_increment').addClass('fade');
+            }, 910);
+            setTimeout(function() {
+                $('.score_increment').remove();
+            }, 1010);
+        }
     }
 
     function resetStreak() {
         streak = 0;
         streakBonus = 0;
-        $('.js-streak').text(streakBonus);
+        $('.js-streak-wrapper').removeClass('active');
+        $('.js-streak').text('');
     }
 
     function resetGame() {        

@@ -380,7 +380,7 @@ const APPController = (function(UICtrl, APICtrl) {
         }
         // Countdown
         $('.js-countdown').text(DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION);
-        startCountdownBar();
+        // startCountdownBar();
         // Play track
         if(DIFFICULTYLEVEL > 2) {
             TRACKSTART = Math.floor(Math.random() * 24 - 0 + 1);
@@ -405,7 +405,7 @@ const APPController = (function(UICtrl, APICtrl) {
         var currentDuration = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION;
         var currentCoundtown = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - audioPlayer.currentTime : TRACKSTART + HARDCOREMODETRACKDURATION - audioPlayer.currentTime;
         var countdownPercentage = currentCoundtown / currentDuration * 100;
-        resetCountdownBar(countdownPercentage + '%');
+        resetCountdownBar(countdownPercentage + '%', 0);
         if(result) {
             that.addClass('correct');
             playSound(soundRight);
@@ -461,10 +461,17 @@ const APPController = (function(UICtrl, APICtrl) {
     function audioCountdown() {
         var timer = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - Math.floor(audioPlayer.currentTime) : TRACKSTART + HARDCOREMODETRACKDURATION - Math.floor(audioPlayer.currentTime);
         $('.js-countdown').text(timer);
+        console.log(timer);
         if(timer == 0)
             return;
-        if(isPlaying)
+        if(isPlaying) {
+            var currentDuration = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION;
+            var currentCoundtown = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - audioPlayer.currentTime : TRACKSTART + HARDCOREMODETRACKDURATION - audioPlayer.currentTime;
+            var countdownPercentage = currentCoundtown / currentDuration * 100;
+            console.log(countdownPercentage);
+            $('.js-countdown-bar').css('width', countdownPercentage + '%');
             window.requestAnimationFrame(audioCountdown);
+        }
     };
 
     $('.js-login-button').on('click', function() {
@@ -533,16 +540,16 @@ const APPController = (function(UICtrl, APICtrl) {
         closeLeaderboard();
     });
 
-    function resetCountdownBar(value = '100%') {
-        $('.js-countdown-bar').css('transition', 'all linear 0s');
+    function resetCountdownBar(value = '100%', transition = 0) {
         $('.js-countdown-bar').css('width', value);
+        $('.js-countdown-bar').attr('data-timer', DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION);
     }
 
     function startCountdownBar() {
-        setTimeout(function() {
-            $('.js-countdown-bar').css('transition', 'all linear ' + (DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION) + 's');
-            $('.js-countdown-bar').css('width', '0%');
-        }, 10);
+        // setTimeout(function() {
+            // $('.js-countdown-bar').css('transition', 'all linear 1s');
+            // $('.js-countdown-bar').css('width', '0%');
+        // }, 1);
     }
 
     function login() {
@@ -585,7 +592,9 @@ const APPController = (function(UICtrl, APICtrl) {
         setTimeout(function() {
             if(setList.length > 0) {
                 resetCountdownBar();
-                playTrack();
+                setTimeout(function() {
+                    playTrack();
+                }, 20);
             }
             else 
                 endGame();
@@ -623,7 +632,7 @@ const APPController = (function(UICtrl, APICtrl) {
     function updateScore(increment = 0) {
         $('.js-score').text(score);
         if(increment > 0) {
-            $('.js-score').parent().append($('<span class="score_increment">+' + increment + '</span>'));
+            $('.js-multiplicator').parent().append($('<span class="score_increment">+' + increment + '</span>'));
             if(streakBonus > 0)
                 $('.js-streak-wrapper').append($('<span class="score_increment score_increment--streak">+' + (streakBonus * POINTSMULTIPLICATOR) + '</span>'));
             setTimeout(function() {

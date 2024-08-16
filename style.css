@@ -410,27 +410,34 @@ svg path,
 .track_display__like[data-liked="true"] [data-liked="false"] {
 	display: none;
 }
-.track_display__like_legend {
+.default_tooltip {
 	position: absolute;
 	bottom: calc(100% + 5px);
-	left: -15px;
-	right: -15px;
+	left: -999px;
+	right: -999px;
 	background: white;
 	border: 1px solid black;
 	border-radius: var(--radius);
 	padding: 6px;
 	text-align: center;
 	font-size: 12px;
+	width: fit-content;
+	color: black;
+	margin: auto;
+	font-weight: 400;
+	font-size: 12px;
+	line-height: 16px;
+	text-align: left;
 }
 @media only screen and (min-width: 641px) {	
-	.track_display__like:not(:hover) .track_display__like_legend {
+	.default_tooltip__wrapper:not(:hover) .default_tooltip {
 		bottom: calc(100% - 5px);
 		opacity: 0;
 		pointer-events: none;
 	}
 }
 @media only screen and (max-width: 640px) {
-	.track_display__like_legend {
+	.default_tooltip {
 		display: none;
 	}
 }
@@ -654,6 +661,34 @@ svg path,
 .score_wrapper:not(.visible) {
 	display: none;
 }
+
+.score_multiplicator {
+	font-size: 16px;
+	font-weight: 700;
+	color: white;
+	background: black;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    text-align: center;
+	border-radius: var(--radius);
+	padding: 0 12px;
+	position: relative;
+	z-index: 1;
+	background: url(assets/multiply.svg) center no-repeat;
+	background-size: 100% auto;
+}
+.score_multiplicator:before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	inset: 0;
+	width: 24px;
+	height: 24px;
+	margin: auto;
+	background: black;
+	border-radius: 50%;
+}
 .score_main {
 	font-size: 24px;
 	font-weight: 700;
@@ -669,7 +704,6 @@ svg path,
 }
 .score_streak {
 	color: white;
-/*	font-size: 24px;*/
 	font-size: 16px;
     height: 50px;
     line-height: 40px;

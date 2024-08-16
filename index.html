@@ -67,47 +67,47 @@
                         </div>
                         <div class="settings_difficulty__row">
                             <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-1 visible">
-                                <!-- <span class="settings_panel__label  panel_label settings_difficulty__title settings_difficulty__title--1">Normal</span> -->
+                                <span class="settings_panel__label  panel_label settings_difficulty__title settings_difficulty__title--1">Normal</span>
                                 <ul class="settings_panel__description settings_difficulty__description">
                                     <li><span>Les extraits durent <b><u>30 secondes</u></b></span></li>
                                     <li><span>Les extraits <b><u>commencent au début</u></b></span></li>
                                     <li><span>Les informations des morceaux sont <b><u>affichées</u></b></span></li>
                                     <li><span><b><u>4 propositions</u></b> de réponses</span></li>
                                     <li><span>Les propositions sont sous forme <b><u>textuelle</u></b></span></li>
-                                    <li><span>Multiplicateur : <b><u>x1</u></b></span></li>
+                                    <li><span>Multiplicateur de points : <b><u style="color: green">x1</u></b></span></li>
                                 </ul>
                             </div>
                             <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-2">
-                                <!-- <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--2">Difficile</span> -->
+                                <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--2">Difficile</span>
                                 <ul class="settings_panel__description settings_difficulty__description">
                                     <li><span>Les extraits durent <b><u>30 secondes</u></b></span></li>
                                     <li><span>Les extraits <b><u>commencent au début</u></b></span></li>
-                                    <li><span>Les informations des morceaux sont <b><u>cachées</u></b></span></li>
+                                    <li><span>Les informations des morceaux sont <b><u style="color: #0000FF">cachées</u></b></span></li>
                                     <li><span><b><u>4 propositions</u></b> de réponses</span></li>
                                     <li><span>Les propositions sont sous forme <b><u>textuelle</u></b></span></li>
-                                    <li><span>Multiplicateur : <b><u>x2</u></b></span></li>
+                                    <li><span>Multiplicateur de points : <b><u style="color: #0000FF">x2</u></b></span></li>
                                 </ul>
                             </div>
                             <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-3">
-                                <!-- <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--3">Infernal</span> -->
+                                <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--3">Infernal</span>
                                 <ul class="settings_panel__description settings_difficulty__description">
-                                    <li><span>Les extraits durent <b><u>5 secondes</u></b></span></li>
-                                    <li><span>La portion jouée de chaque extrait est <b><u>aléatoire</u></b></span></li>
+                                    <li><span>Les extraits durent <b><u style="color: #FF0000">5 secondes</u></b></span></li>
+                                    <li><span>La portion jouée de chaque extrait est <b><u style="color: #FF0000">aléatoire</u></b></span></li>
                                     <li><span>Les informations des morceaux sont <b><u>cachées</u></b></span></li>
                                     <li><span><b><u>4 propositions</u></b> de réponses</span></li>
                                     <li><span>Les propositions sont sous forme <b><u>textuelle</u></b></span></li>
-                                    <li><span>Multiplicateur : <b><u>x3</u></b></span></li>
+                                    <li><span>Multiplicateur de points : <b><u style="color: #FF0000">x3</u></b></span></li>
                                 </ul>
                             </div>
                             <div class="settings_difficulty__details js-difficulty-details js-difficulty-details-4">
-                                <!-- <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--4">Extrême</span> -->
+                                <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--4">Extrême</span>
                                 <ul class="settings_panel__description settings_difficulty__description">
                                     <li><span>Les extraits durent <b><u>5 secondes</u></b></span></li>
                                     <li><span>La portion jouée de chaque extrait est <b><u>aléatoire</u></b></span></li>
                                     <li><span>Les informations des morceaux sont <b><u>cachées</u></b></span></li>
-                                    <li><span><b><u>8 propositions</u></b> de réponses</span></li>
-                                    <li><span>Les propositions sont sous forme d'<b><u>avatars</u></b></span></li>
-                                    <li><span>Multiplicateur : <b><u>x4</u></b></span></li>
+                                    <li><span><b><u style="color: #800080">8 propositions</u></b> de réponses</span></li>
+                                    <li><span>Les propositions sont sous forme d'<b><u style="color: #800080">avatars</u></b></span></li>
+                                    <li><span>Multiplicateur de points : <b><u style="color: #800080">x4</u></b></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -135,18 +135,20 @@
         <div class="game_display">            
             <span class="score_wrapper js-score-wrapper">
                 <!-- <span class="score_aside"><span class="score_display score_display--aside">x<span class="js-multiplicator">1</span></span></span> -->
-                <span class="score_main"><span class="js-score">0</span></span>
-                <span class="score_streak js-streak-wrapper"><span class="js-streak"></span></span>
+                <div class="score_wrapper__col">
+                    <span class="score_main"><span class="js-score">0</span></span>
+                    <span class="score_streak js-streak-wrapper"><span class="js-streak"></span></span>
+                </div>
+                <button class="track_display__like js-like-track" data-liked="false">
+                    <span class="track_display__like_legend default_transition" data-liked="true">Unliker ce morceau</span>
+                    <span class="track_display__like_legend default_transition" data-liked="false">Liker ce morceau</span>
+                </button>
             </span>
             <div class="track_display__wrapper">
                 <span class="game_top_bar">
                     <div class="game_top_bar__tracks">
                         <span class="js-track-number">0</span>/<span class="js-track-total">40</span>
                     </div>
-                    <button class="track_display__like js-like-track" data-liked="false">
-                        <span class="track_display__like_legend default_transition" data-liked="true">Unliker ce morceau</span>
-                        <span class="track_display__like_legend default_transition" data-liked="false">Liker ce morceau</span>
-                    </button>
                 </span>
                 <div class="track_display">
                     <div class="track_display__half track_display__half--cover js-track-cover">

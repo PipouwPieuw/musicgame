@@ -416,7 +416,7 @@ const APPController = (function(UICtrl, APICtrl) {
             if(streakBonus > 0)
                 $('.js-streak-wrapper').addClass('active');
             $('.js-streak').text(streakBonus > 0 ? streakBonus : '');
-            updateScore(scoreIncrement);
+            updateScore(POINTSBYANSWER * POINTSMULTIPLICATOR);
         }
         else {
             if(PRODMODE)
@@ -453,7 +453,7 @@ const APPController = (function(UICtrl, APICtrl) {
             nextTrack();
         }
         else if(isPlaying) {
-            audioPlayer.volume = 0;
+            // audioPlayer.volume = 0;
             audioPlayer.play();
         }
     });
@@ -624,6 +624,8 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-score').text(score);
         if(increment > 0) {
             $('.js-score').parent().append($('<span class="score_increment">+' + increment + '</span>'));
+            if(streakBonus > 0)
+                $('.js-streak-wrapper').append($('<span class="score_increment score_increment--streak">+' + (streakBonus * POINTSMULTIPLICATOR) + '</span>'));
             setTimeout(function() {
                 $('.score_increment').addClass('animate');
             }, 10);
@@ -650,7 +652,7 @@ const APPController = (function(UICtrl, APICtrl) {
 
     function quitGame() {        
         score = 0;
-        updateScore(score);
+        updateScore();
         resetStreak();
         setList = [];
         setListLength = 0;
@@ -676,7 +678,7 @@ const APPController = (function(UICtrl, APICtrl) {
 
     return {
         init() {
-            updateScore(score);
+            updateScore();
             loadPlaylist();
         }
     }

@@ -294,6 +294,7 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-difficulty-details').removeClass('visible');
         $('.js-difficulty-details-' + DIFFICULTYLEVEL).addClass('visible');
         $('.js-multiplicator').text(POINTSMULTIPLICATOR);
+        $('.js-multiplicator-wrapper').attr('data-value', POINTSMULTIPLICATOR);
 
         // Display infos
         DISPLAYTRACKSINFOS = DIFFICULTYLEVEL == 1;
@@ -461,14 +462,12 @@ const APPController = (function(UICtrl, APICtrl) {
     function audioCountdown() {
         var timer = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - Math.floor(audioPlayer.currentTime) : TRACKSTART + HARDCOREMODETRACKDURATION - Math.floor(audioPlayer.currentTime);
         $('.js-countdown').text(timer);
-        console.log(timer);
         if(timer == 0)
             return;
         if(isPlaying) {
             var currentDuration = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION;
             var currentCoundtown = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - audioPlayer.currentTime : TRACKSTART + HARDCOREMODETRACKDURATION - audioPlayer.currentTime;
             var countdownPercentage = currentCoundtown / currentDuration * 100;
-            console.log(countdownPercentage);
             $('.js-countdown-bar').css('width', countdownPercentage + '%');
             window.requestAnimationFrame(audioCountdown);
         }
@@ -596,7 +595,7 @@ const APPController = (function(UICtrl, APICtrl) {
                     playTrack();
                 }, 20);
             }
-            else 
+            else if($('.js-wrapper').hasClass('game_started'))
                 endGame();
         }, 1000);
     }
@@ -632,7 +631,7 @@ const APPController = (function(UICtrl, APICtrl) {
     function updateScore(increment = 0) {
         $('.js-score').text(score);
         if(increment > 0) {
-            $('.js-multiplicator').parent().append($('<span class="score_increment">+' + increment + '</span>'));
+            $('.js-multiplicator').parent().append($('<span class="score_increment score_increment--base">+' + increment + '</span>'));
             if(streakBonus > 0)
                 $('.js-streak-wrapper').append($('<span class="score_increment score_increment--streak">+' + (streakBonus * POINTSMULTIPLICATOR) + '</span>'));
             setTimeout(function() {

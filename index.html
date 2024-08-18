@@ -135,11 +135,14 @@
         <div class="game_display">            
             <span class="score_wrapper js-score-wrapper">
                 <div class="score_wrapper__col">
-                    <span class="score_multiplicator default_tooltip__wrapper">
-                        <span class="js-multiplicator">1</span>                        
-                        <span class="default_tooltip default_transition">Le multiplicateur de points courrant.</span>
-                    </span>
-                    <span class="score_main"><span class="js-score">0</span></span>
+                    <div class="score_wrapper__box">
+                        <span class="score_multiplicator default_tooltip__wrapper js-multiplicator-wrapper" data-value="1">
+                            <span class="score_multiplicator__prefix">x</span>
+                            <span class="js-multiplicator">1</span>                        
+                            <span class="default_tooltip default_transition">Le multiplicateur de points courrant.</span>
+                        </span>
+                        <span class="score_main"><span class="js-score">0</span></span>
+                    </div>
                     <span class="score_streak default_tooltip__wrapper js-streak-wrapper">
                         <span class="js-streak"></span>                        
                         <span class="default_tooltip default_transition">Le bonus de chaîne se déclenche au bout de 3 bonnes réponses consécutives et s'incrémente à chaque nouvelle bonne réponse.<br/>Sa valeur est multipliée par le multiplicateur de la difficulté courrante puis ajoutée au score.</span>

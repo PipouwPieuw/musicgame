@@ -47,12 +47,10 @@ svg path,
 @media only screen and (max-width: 640px) {
 	#wrapper {	
 		padding: 65px 10px 10px 10px;
+		justify-content: flex-start;
 	}
 	#wrapper.game_started {	
 		padding-top: 50px;
-	}
-	#wrapper:not(.game_started) {
-		justify-content: flex-start;
 	}
 }
 #wrapper:not(.initialized) {

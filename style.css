@@ -120,7 +120,8 @@ svg path,
 }
 .bar_top__logout,
 .bar_top__leaderboard,
-.bar_top__back {
+.bar_top__back,
+.bar_top__menu {
 	background: transparent;
 	border: 0;
 	padding: 0;
@@ -131,14 +132,17 @@ svg path,
 	height: 90px;
 }
 #wrapper.game_started .bar_top__logout,
+.bar_top__logout.hidden,
 #wrapper.game_started .bar_top__leaderboard,
-#wrapper:not(.game_started) .bar_top__back {
+#wrapper:not(.game_started) .bar_top__back,
+.bar_top__menu:not(.visible) {
 	display: none;
 }
 @media only screen and (max-width: 640px) {
 	.bar_top__logout,
 	.bar_top__leaderboard,
-	.bar_top__back {
+	.bar_top__back,
+	.bar_top__menu {
 		width: 50px;
 	    height: 50px;
 	}
@@ -149,7 +153,8 @@ svg path,
 	.bar_top__back:hover {
 		background: red;
 	}
-	.bar_top__leaderboard:hover {
+	.bar_top__leaderboard:hover,
+	.bar_top__menu:hover {
 		background: green;
 	}
 }
@@ -175,12 +180,12 @@ svg path,
 .buttons_wrapper:not(.visible) {
 	display: none;
 }
-.start_game {
+.button_big {
 	width: 100%;
 	justify-content: center;
 	text-align: center;
 }
-.start_game,
+.button_big,
 .replay_game,
 .back_to_menu {
 	border: 4px solid black;
@@ -195,13 +200,13 @@ svg path,
 	border-radius: var(--radius);
 }
 @media only screen and (max-width: 640px) {
-	.start_game,
+	.button_big,
 	.replay_game,
 	.back_to_menu {
 		font-size: 22px;
 	}
 
-	.start_game {
+	.button_big {
 		position: fixed;
 	    bottom: 0;
 	    left: 0;
@@ -213,10 +218,10 @@ svg path,
 	}
 }
 @media only screen and (min-width: 641px) {
-	.start_game:hover,
+	.button_big:hover,
 	.replay_game:hover,
 	.back_to_menu:hover,
-	.start_game:focus,
+	.button_big:focus,
 	.replay_game:focus,
 	.back_to_menu:focus {
 		background: black;
@@ -257,11 +262,24 @@ svg path,
 .end_game__label {
 	border-right: 2px solid black;
 	font-size: 24px;
-	flex: 0 0 100px;
+	flex: 0 0 140px;
 }
 .end_game__value {
 	font-size: 20px;
 	text-align: right;
+}
+
+.end_game__value[data-difficulty="1"] {
+	color: green;
+}
+.end_game__value[data-difficulty="2"] {
+	color: blue;
+}
+.end_game__value[data-difficulty="3"] {
+	color: red;
+}
+.end_game__value[data-difficulty="4"] {
+	color: purple;
 }
 .end_game__message {
 	margin-top: 10px;

@@ -211,7 +211,7 @@ const APPController = (function(UICtrl, APICtrl) {
             if(result.id != null) {
                 playerData = result;                
                 getScores().then(function(result) {
-                    playerData.scores = result[0].scores;
+                    playerData.scores = result[0].scores || [];
                 });
                 $('.js-settings').addClass('visible');
                 $('.js-bar-top').addClass('visible');
@@ -289,8 +289,12 @@ const APPController = (function(UICtrl, APICtrl) {
 
     // Set difficulty level
     $('.js-input-difficulty').on('change', function() {
+        var difficultyName = $(this).find('+ label').text();
+        console.log(difficultyName);
         DIFFICULTYLEVEL = $(this).val();
         POINTSMULTIPLICATOR = DIFFICULTYLEVEL;
+        $('.js-difficulty').text(difficultyName);
+        $('.js-difficulty').attr('data-difficulty', DIFFICULTYLEVEL);
         $('.js-difficulty-details').removeClass('visible');
         $('.js-difficulty-details-' + DIFFICULTYLEVEL).addClass('visible');
         $('.js-multiplicator').text(POINTSMULTIPLICATOR);
@@ -674,13 +678,18 @@ const APPController = (function(UICtrl, APICtrl) {
     function openLeaderboard() {
         $('.js-settings').removeClass('visible');
         $('.js-leaderboard').addClass('visible');
+        $('.js-close-leaderboard').addClass('visible');
+        $('.js-logout-button').addClass('hidden');
         $('.js-display-leaderboard').addClass('active');
+        $('#wrapper').removeClass('game_ended');
     }
 
     function closeLeaderboard() {
         $('.js-settings').addClass('visible');
         $('.js-leaderboard').removeClass('visible');
+        $('.js-close-leaderboard').removeClass('visible');
         $('.js-display-leaderboard').removeClass('active');
+        $('.js-logout-button').removeClass('hidden');
         $('.js-leaderboard-content').empty();
     }
 

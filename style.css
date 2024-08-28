@@ -343,6 +343,9 @@ svg path,
 	border-radius: 0 0 var(--radius) var(--radius);
 }
 @media only screen and (max-width: 640px) {
+	.game_display {
+		padding-top: 30px;
+	}
 	.track_display {
 		flex-wrap: wrap;
 	}

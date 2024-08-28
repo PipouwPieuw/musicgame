@@ -51,6 +51,9 @@ svg path,
 	#wrapper.game_started {	
 		padding-top: 50px;
 	}
+	#wrapper:not(.game_started) {
+		justify-content: flex-start;
+	}
 }
 #wrapper:not(.initialized) {
 	opacity: 0;
@@ -641,11 +644,11 @@ svg path,
 	max-width: 100%;
 	height: auto;
 }
-@media only screen and (min-width: 641px) {	
+/*@media only screen and (min-width: 641px) {	
 	.list_answers:hover .list_answers__avatar:not(:hover) {
 		opacity: .5;
 	}
-}
+}*/
 .list_answers__avatar.correct:before,
 .list_answers__avatar.incorrect:before {
 	content: "";

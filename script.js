@@ -560,7 +560,10 @@ const APPController = (function(UICtrl, APICtrl) {
         USERKEY = $('.js-userkey').val().toLowerCase();
         getPlayerData().then(function(result) {
             if(result.id != null) {
-                playerData = result;
+                playerData = result;                
+                getScores().then(function(result) {
+                    playerData.scores = result[0].scores || [];
+                });
                 window.localStorage.setItem("username", USERNAME);
                 window.localStorage.setItem("userkey", USERKEY);
                 $('.js-username').val('');
@@ -570,7 +573,7 @@ const APPController = (function(UICtrl, APICtrl) {
                 $('.js-login').removeClass('visible');
             }
             else {
-                alert('WRONG');
+                alert('Les identifiants sont incorrects');
             }
         });
     }
@@ -584,6 +587,7 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-settings').removeClass('visible');
         $('.js-bar-top').removeClass('visible');
         $('.js-login').addClass('visible');
+        $('.js-wrapper').removeClass('game_ended');
     }
 
     function playSound(soundElem) {

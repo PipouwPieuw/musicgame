@@ -42,7 +42,6 @@
         <div class="settings_panel panel_box js-settings">
             <span class="panel_box__title">Paramètres</span>
             <div class="settings_panel__box panel_box__box">
-                <!-- <button class="button_back button_default js-hide-settings">Retour</button> -->
                 <div class="settings_panel__inner">
                     <div class="settings_panel__line">
                         <div class="settings_panel__label_wrapper">
@@ -51,11 +50,6 @@
                         </div>
                         <input class="settings_panel__number panel_input js-nb-tracks" type="number" id="tracksAmount" min="1" max="1000" value="40"/>
                     </div>
-                    <!-- <div class="settings_panel__line">
-                        <label class="settings_panel__label" for="optionsAmount">Nombre de réponses proposées (min. 4)</label>
-                        <input class="settings_panel__number js-nb-options" type="number" id="optionsAmount" min="4" value="4"/>
-                        <span class="settings_panel__description">+1 point par option supplémentaire pour chaque bonne réponse.<br/>Valeur par défaut : 4.</span>
-                    </div> -->
                     <div class="settings_panel__line">
                         <label class="settings_panel__label settings_panel__label--full panel_label">Niveau de difficulté</label>
                         <div class="settings_difficulty__inputs">
@@ -73,7 +67,7 @@
                                 <span class="settings_panel__label  panel_label settings_difficulty__title settings_difficulty__title--1">Normal</span>
                                 <ul class="settings_panel__description settings_difficulty__description">
                                     <li><span>Les extraits durent <b><u>30 secondes</u></b></span></li>
-                                    <li><span>Les extraits <b><u>commencent au début</u></b></span></li>
+                                    <li><span>Les extraits <b><u>sont joués en entier</u></b></span></li>
                                     <li><span>Les informations des morceaux sont <b><u>affichées</u></b></span></li>
                                     <li><span><b><u>4 propositions</u></b> de réponses</span></li>
                                     <li><span>Les propositions sont sous forme <b><u>textuelle</u></b></span></li>
@@ -84,7 +78,7 @@
                                 <span class="settings_panel__label panel_label settings_difficulty__title settings_difficulty__title--2">Difficile</span>
                                 <ul class="settings_panel__description settings_difficulty__description">
                                     <li><span>Les extraits durent <b><u>30 secondes</u></b></span></li>
-                                    <li><span>Les extraits <b><u>commencent au début</u></b></span></li>
+                                    <li><span>Les extraits <b><u>sont joués en entier</u></b></span></li>
                                     <li><span>Les informations des morceaux sont <b><u style="color: #0000FF">cachées</u></b></span></li>
                                     <li><span><b><u>4 propositions</u></b> de réponses</span></li>
                                     <li><span>Les propositions sont sous forme <b><u>textuelle</u></b></span></li>
@@ -119,10 +113,6 @@
                 <button class="start_game button_big js-play-track">Lancer la partie</button>
             </div>
         </div>
-        <!-- <div class="buttons_wrapper visible js-buttons-wrapper">
-            <button class="start_game js-play-track">Partie rapide</button>
-            <button class="start_game js-show-settings">Partie personnalisée</button>
-        </div> -->
         <div class="end_game">
             <span class="end_game__title">Jeu terminé</span>
             <div class="end_game__score_wrapper">
@@ -130,7 +120,6 @@
                 <span class="end_game__score"><span class="end_game__label">Score</span><span class="end_game__value js-score"></span></span>
             </div>
             <span class="end_game__message js-message"></span>
-            <!-- <span class="end_game__not_enough js-not-enough">Il va falloir faire mieux que ça.</span> -->
             <button class="replay_game js-replay-game">Rejouer</button>
             <button class="back_to_menu js-back-menu">Retour au menu</button>
         </div>
@@ -150,8 +139,7 @@
                         </span>
                     </div>
                     <span class="score_streak default_tooltip__wrapper js-streak-wrapper">
-                        <span class="js-streak"></span>                        
-                        <!-- <span class="default_tooltip default_transition">Le bonus de chaîne se déclenche au bout de 3 bonnes réponses consécutives et s'incrémente à chaque nouvelle bonne réponse.<br/>Sa valeur est multipliée par le multiplicateur de la difficulté courrante puis ajoutée au score.</span> -->
+                        <span class="js-streak"></span>
                         <span class="default_tooltip default_transition">Le bonus de chaîne</span>
                     </span>
                 </div>
@@ -186,14 +174,28 @@
                 <span class="track_display__countdown js-countdown"></span>
             </div>
         </div>
-        <div class="panel_box leaderboard js-leaderboard">            
-            <!-- <button class="button_back button_default leaderboard_close js-close-leaderboard">
-                <svg width="468" height="400" viewBox="0 0 468 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M224.237 9.76311C237.254 22.7806 237.254 43.8861 224.237 56.9036L114.474 166.667H434C452.409 166.667 467.333 181.59 467.333 200C467.333 218.409 452.409 233.333 434 233.333H114.474L224.237 343.096C237.254 356.114 237.254 377.219 224.237 390.237C211.219 403.254 190.114 403.254 177.096 390.237L10.4297 223.57C-2.58774 210.553 -2.58774 189.447 10.4297 176.43L177.096 9.76311C190.114 -3.25437 211.219 -3.25437 224.237 9.76311Z" fill="white"/>
-                </svg>
-                <span>Retour</span>
-            </button> -->
-            <!-- <div class="leaderboard__heading">Tableaux des scores</div> -->
+        <div class="panel_box leaderboard js-leaderboard">
+            <span class="panel_box__title">Statistiques</span>
+            <div class="panel_box__box">
+            	<div class="settings_panel__line">
+                    <div class="settings_panel__label_wrapper">
+                        <label class="settings_panel__label panel_label" for="tracksAmount">Parties jouées</label>
+                    </div>
+                    <div class="settings_panel__value">0</div>
+                </div>
+            	<div class="settings_panel__line">
+                    <div class="settings_panel__label_wrapper">
+                        <label class="settings_panel__label panel_label" for="tracksAmount">Réponses correctes</label>
+                    </div>
+                    <div class="settings_panel__value">0</div>
+                </div>
+            	<div class="settings_panel__line">
+                    <div class="settings_panel__label_wrapper">
+                        <label class="settings_panel__label panel_label" for="tracksAmount">Réponses incorrectes</label>
+                    </div>
+                    <div class="settings_panel__value">0</div>
+                </div>
+            </div>
             <span class="panel_box__title">Hall of fame</span>
             <div class="panel_box__box js-leaderboard-content"></div>
         </div>

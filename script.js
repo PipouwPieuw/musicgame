@@ -35,12 +35,24 @@ const APIController = (function() {
         return data.tracks;
     }
 
+    const _getPlaylist2 = async(token) => {
+        const result = await fetch('https://api.spotify.com/v1/playlists/7EMbtxrDS6DfnnQF89oise?market=FR', {
+            method: 'GET',
+            headers: { 'Authorization' : 'Bearer ' + token}
+        });
+        const data = await result.json();
+        return data.tracks;
+    }
+
     return {
         getToken() {
             return _getToken();
         },
         getPlaylist(token) {
             return _getPlaylist(token);
+        },
+        getPlaylist2(token) {
+            return _getPlaylist2(token);
         }
     }
 })();
@@ -75,7 +87,7 @@ const APPController = (function(UICtrl, APICtrl) {
     // GAME LOGIC
     const SHUFFLE = true;
     const DEVMODE = false;
-    const PRODMODE = true;
+    const PRODMODE = false;
     const DEFAULTANSWERSAMOUNT = 4;
     const DIFFICULTYNAMES = ['Normal', 'Difficile', 'Infernal', 'Extrême'];
     var MINSTREAK = 3;
@@ -91,7 +103,7 @@ const APPController = (function(UICtrl, APICtrl) {
     var POINTSMULTIPLICATOR = 1;
     var streak = 0;
     var streakBonus = 0;
-    var tracks = {};
+    var tracks = [];
     var isPlaying = false;
     var answers = [];
     var score = 0;
@@ -158,7 +170,7 @@ const APPController = (function(UICtrl, APICtrl) {
             }
         }
         // Remainder tracks to fill setlist
-        while(setList.length < TRACKSBYGAME && setList.length < tracks.items.length && playersDataBuild.length > 0) {
+        while(setList.length < TRACKSBYGAME && setList.length < tracks.length && playersDataBuild.length > 0) {
             playersDataBuild = shuffleArray(playersDataBuild);
             if(playersDataBuild[0][1].length == 0) {
                 playersDataBuild.shift();
@@ -195,10 +207,12 @@ const APPController = (function(UICtrl, APICtrl) {
         //store the token onto the page
         UICtrl.storeToken(token);
         //get playlist
-        tracks = await APICtrl.getPlaylist(token);
+        var tracks1 = await APICtrl.getPlaylist(token);
+        var tracks2 = await APICtrl.getPlaylist2(token);
+        tracks = tracks1.items.concat(tracks2.items);
         if(DEVMODE) {
-	        for(track of tracks.items) {
-	            console.log(tracks.items.indexOf(track) + 1);
+	        for(track of tracks) {
+	            console.log(tracks.indexOf(track) + 1);
 	            console.log(track.track.preview_url);
 	            console.log(track.track.id);
                 console.log('----------');
@@ -338,13 +352,13 @@ const APPController = (function(UICtrl, APICtrl) {
         // Display track infos only if setting is set to true
         if(DISPLAYTRACKSINFOS) {
             // Track image
-            var image = tracks.items[index0].track.album.images[1].url;
+            var image = tracks[index0].track.album.images[1].url;
             $('.js-cover').attr('src', image);
             // Track name
-            var name = tracks.items[index0].track.name;
+            var name = tracks[index0].track.name;
             $('.js-name').text(name);
             // Track artists
-            var artists = tracks.items[index0].track.artists;
+            var artists = tracks[index0].track.artists;
             var artistsText = "";
             for(artist in artists) {
                 artistsText += artists[artist].name + ", ";

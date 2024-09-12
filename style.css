@@ -1146,6 +1146,30 @@ svg path,
 	}
 }
 
+
+.stats_row {
+	display: flex;
+}
+.stats_row:not(:first-child) {
+	padding-top: 8px;
+    border-top: 1px solid black;
+    margin-top: 8px;
+}
+.stats_cell {
+	flex: 0 0 20%;
+}
+.stats_cell--header {
+	text-align: right;
+}
+.stats_label {
+	font-size: 16px;
+	color: darkgray;
+}
+.stats_value {
+	font-size: 20px;
+	text-align: right;
+}
+
 .leaderboard {
 	text-align: left;
 	width: 100%;

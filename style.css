@@ -20,6 +20,18 @@ ul {
 	margin: 0;
 }
 
+@media only screen and (min-width: 641px) {
+	.hide_desktop {
+		display: none !important;
+	}
+}
+
+@media only screen and (max-width: 640px) {
+	.hide_mobile {
+		display: none !important;
+	}
+}
+
 button,
 .default_transition,
 svg path,
@@ -1150,24 +1162,77 @@ svg path,
 .stats_row {
 	display: flex;
 }
+@media only screen and (max-width: 640px) {	
+	.stats_row {
+		flex-wrap: wrap;
+	}
+}
 .stats_row:not(:first-child) {
-	padding-top: 8px;
+	padding-top: 12px;
     border-top: 1px solid black;
-    margin-top: 8px;
+    margin-top: 12px;
+}
+.stats_row--mobile:not(:first-child) {
+	flex: 0 0 100%;
+	margin-top: 0;
+	border: 0;
 }
 .stats_cell {
-	flex: 0 0 20%;
+	flex: 0 0 calc((100% - 180px) / 4);
+}
+@media only screen and (max-width: 640px) {	
+	.stats_cell {
+		flex: 0 0 25%;
+	}
+}
+.stats_cell--first {
+	flex: 0 0 180px;
+}
+@media only screen and (max-width: 640px) {	
+	.stats_cell--first {
+		flex: 0 0 100%;
+	}
 }
 .stats_cell--header {
 	text-align: right;
 }
+@media only screen and (max-width: 640px) {	
+	.stats_cell--header {
+		text-align: center;
+	}
+}
+.stats_cell.panel_label {
+	font-size: 19px;
+}
+@media only screen and (max-width: 640px) {	
+	.stats_cell.panel_label {
+		font-size: 16px;
+		padding-bottom: 8px;
+	}
+	.stats_cell.panel_label:not(:last-child) {
+		border-right: 1px solid black;
+	}
+}
 .stats_label {
-	font-size: 16px;
-	color: darkgray;
+	font-size: 18px;
+	font-weight: 700;
+	letter-spacing: -.2px;
+}
+@media only screen and (max-width: 640px) {	
+	.stats_label {
+	}
 }
 .stats_value {
 	font-size: 20px;
 	text-align: right;
+}
+@media only screen and (max-width: 640px) {	
+	.stats_value {
+		text-align: center;
+	}
+	.stats_value:not(:last-child) {
+		border-right: 1px solid black;
+	}
 }
 
 .leaderboard {
@@ -1282,4 +1347,17 @@ svg path,
 	font-size: 16px;
 	font-weight: 700;
 	padding: 0 15px;
+}
+
+.panel_tabs__tabs {
+	display: flex;
+	gap: 8px;
+}
+.panel_tabs__tab:not(.active):not(:hover) {
+	background: darkgray;
+	border-color: darkgray;
+}
+
+.panel_tabs__section:not(.active) {
+	display: none;
 }

@@ -230,8 +230,6 @@ const APPController = (function(UICtrl, APICtrl) {
                 $('.js-settings').addClass('visible');
                 $('.js-bar-top').addClass('visible');
                 $('.js-login').removeClass('visible');
-                updateStatsGamesPlayed();
-                updateStatsAnswers();
             }
             $('#wrapper').addClass('initialized');
         });
@@ -517,6 +515,10 @@ const APPController = (function(UICtrl, APICtrl) {
             return;
         }
 
+        updateStatsGamesPlayed();
+        updateStatsAnswers();
+        updateStatsBestScore();
+
         getAllScores().then(function(result) {
             var leaderboard = {}
             for(var difficulty in DIFFICULTYNAMES) {
@@ -560,6 +562,17 @@ const APPController = (function(UICtrl, APICtrl) {
 
     $('.js-close-leaderboard').on('click', function() {
         closeLeaderboard();
+    });
+
+    // Tabs
+    $('.js-tab').on('click', function() {
+        if($(this).hasClass('active'))
+            return;
+        var target = $(this).attr('rel');
+        $('.js-tab.active').removeClass('active');
+        $('.js-tab-section.active').removeClass('active');
+        $(this).addClass('active');
+        $('.js-tab-section[rel="' + target + '"]').addClass('active');
     });
 
     function resetCountdownBar(value = '100%', transition = 0) {
@@ -697,6 +710,31 @@ const APPController = (function(UICtrl, APICtrl) {
     		var level = $(this).attr('rel');
     		$(this).text(playerData.wrong_answers[level]);
     	});
+    }
+
+    function updateStatsBestScore() {
+
+        var bestScores = {
+            "Normal": 0,
+            "Difficile": 0,
+            "Infernal": 0,
+            "Extrême": 0
+        }
+
+        for(score in playerData.scores) {
+            console.log(111);
+            var currentData = playerData.scores[score];
+            var currentDifficulty = currentData[0];
+            var currentScore = currentData[2];
+            bestScores[currentDifficulty] = bestScores[currentDifficulty] > currentScore ? bestScores[currentDifficulty] : currentScore;
+        }
+
+        console.log(bestScores);
+
+        $('.js-best-score').each(function() {
+            var level = $(this).attr('rel');
+            $(this).text(bestScores[level]);
+        });
     }
 
     function resetStreak() {

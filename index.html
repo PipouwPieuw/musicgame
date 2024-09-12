@@ -174,112 +174,79 @@
                 <span class="track_display__countdown js-countdown"></span>
             </div>
         </div>
-        <div class="panel_box leaderboard js-leaderboard">
-            <span class="panel_box__title">Statistiques</span>
-            <div class="panel_box__box">
-
-            	<div class="stats_row">            		
-                    <span class="stats_cell"></span>
-                    <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--1 panel_label">Normal</span>
-                    <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--2 panel_label">Difficile</span>
-                    <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--3 panel_label">Infernal</span>
-                    <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--4 panel_label">Extrême</span>
-            	</div>
-            	<div class="stats_row">  
-                    <span class="stats_cell stats_label">Parties jouées</span>
-                    <span class="stats_cell stats_value js-games-played" rel="Normal">0</span>
-                    <span class="stats_cell stats_value js-games-played" rel="Difficile">0</span>
-                    <span class="stats_cell stats_value js-games-played" rel="Infernal">0</span>
-                    <span class="stats_cell stats_value js-games-played" rel="Extrême">0</span>
-
-            	</div>
-            	<div class="stats_row">  
-                    <span class="stats_cell stats_label">Réponses correctes</span>
-                    <span class="stats_cell stats_value js-good-answers" rel="Normal">0</span>
-                    <span class="stats_cell stats_value js-good-answers" rel="Difficile">0</span>
-                    <span class="stats_cell stats_value js-good-answers" rel="Infernal">0</span>
-                    <span class="stats_cell stats_value js-good-answers" rel="Extrême">0</span>
-
-            	</div>
-            	<div class="stats_row">  
-                    <span class="stats_cell stats_label">Réponses incorrectes</span>
-                    <span class="stats_cell stats_value js-wrong-answers" rel="Normal">0</span>
-                    <span class="stats_cell stats_value js-wrong-answers" rel="Difficile">0</span>
-                    <span class="stats_cell stats_value js-wrong-answers" rel="Infernal">0</span>
-                    <span class="stats_cell stats_value js-wrong-answers" rel="Extrême">0</span>
-
-            	</div>
-
-
-            	<!-- <div class="settings_panel__line">
-                    <div class="settings_panel__label_wrapper">
-                        <label class="settings_panel__label panel_label" for="tracksAmount">Parties jouées</label>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--1 panel_label">Normal</span>
-                        	<span class="leaderboard__value js-games-played" rel="Normal">0</span>
-                        </div>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--2 panel_label">Difficile</span>
-                        	<span class="leaderboard__value js-games-played" rel="Difficile">0</span>
-                        </div>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--3 panel_label">Infernal</span>
-                        	<span class="leaderboard__value js-games-played" rel="Infernal">0</span>
-                        </div>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--4 panel_label">Extrême</span>
-                        	<span class="leaderboard__value js-games-played" rel="Extrême">0</span>
-                        </div>
-                    </div>
-                    <div class="settings_panel__value">0</div>
-                </div>
-            	<div class="settings_panel__line">
-                    <div class="settings_panel__label_wrapper">
-                        <label class="settings_panel__label panel_label" for="tracksAmount">Réponses correctes</label>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--1 panel_label">Normal</span>
-                        	<span class="leaderboard__value js-good-answers" rel="Normal">0</span>
-                        </div>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--2 panel_label">Difficile</span>
-                        	<span class="leaderboard__value js-good-answers" rel="Difficile">0</span>
-                        </div>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--3 panel_label">Infernal</span>
-                        	<span class="leaderboard__value js-good-answers" rel="Infernal">0</span>
-                        </div>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--4 panel_label">Extrême</span>
-                        	<span class="leaderboard__value js-good-answers" rel="Extrême">0</span>
-                        </div>
-                    </div>
-                    <div class="settings_panel__value">0</div>
-                </div>
-            	<div class="settings_panel__line">
-                    <div class="settings_panel__label_wrapper">
-                        <label class="settings_panel__label panel_label" for="tracksAmount">Réponses incorrectes</label>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--1 panel_label">Normal</span>
-                        	<span class="leaderboard__value js-wrong-answers" rel="Normal">0</span>
-                        </div>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--2 panel_label">Difficile</span>
-                        	<span class="leaderboard__value js-wrong-answers" rel="Difficile">0</span>
-                        </div>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--3 panel_label">Infernal</span>
-                        	<span class="leaderboard__value js-wrong-answers" rel="Infernal">0</span>
-                        </div>
-                        <div class="leaderboard__item leaderboard__item--stats">
-                        	<span class="leaderboard__title leaderboard__title--4 panel_label">Extrême</span>
-                        	<span class="leaderboard__value js-wrong-answers" rel="Extrême">0</span>
-                        </div>
-                    </div>
-                    <div class="settings_panel__value">0</div>
-                </div>-->
+        <div class="leaderboard panel_box js-leaderboard">
+            <div class="panel_tabs__tabs js-tabs-wrapper">
+                <button class="panel_box__title panel_tabs__tab active js-tab" rel="stats">Statistiques</button>
+                <button class="panel_box__title panel_tabs__tab js-tab" rel="leaderboard">Classement</button>
             </div>
-            <span class="panel_box__title">Hall of fame</span>
-            <div class="panel_box__box js-leaderboard-content"></div>
+            <div class="statistics panel_tabs__section js-tab-section active" rel="stats">
+                <div class="panel_box__box">
+                    <div class="stats_row hide_mobile">                 
+                        <span class="stats_cell stats_cell--first"></span>
+                        <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--1 panel_label">Normal</span>
+                        <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--2 panel_label">Difficile</span>
+                        <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--3 panel_label">Infernal</span>
+                        <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--4 panel_label">Extrême</span>
+                    </div>
+                    <div class="stats_row">  
+                        <span class="stats_cell stats_cell--first stats_label">Parties jouées</span>
+                        <div class="stats_row stats_row--mobile hide_desktop">
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--1 panel_label">Normal</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--2 panel_label">Difficile</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--3 panel_label">Infernal</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--4 panel_label">Extrême</span>
+                        </div>
+                        <span class="stats_cell stats_value js-games-played" rel="Normal">0</span>
+                        <span class="stats_cell stats_value js-games-played" rel="Difficile">0</span>
+                        <span class="stats_cell stats_value js-games-played" rel="Infernal">0</span>
+                        <span class="stats_cell stats_value js-games-played" rel="Extrême">0</span>
+
+                    </div>
+                    <div class="stats_row">  
+                        <span class="stats_cell stats_cell--first stats_label">Réponses correctes</span>
+                        <div class="stats_row stats_row--mobile hide_desktop">
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--1 panel_label">Normal</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--2 panel_label">Difficile</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--3 panel_label">Infernal</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--4 panel_label">Extrême</span>
+                        </div>
+                        <span class="stats_cell stats_value js-good-answers" rel="Normal">0</span>
+                        <span class="stats_cell stats_value js-good-answers" rel="Difficile">0</span>
+                        <span class="stats_cell stats_value js-good-answers" rel="Infernal">0</span>
+                        <span class="stats_cell stats_value js-good-answers" rel="Extrême">0</span>
+
+                    </div>
+                    <div class="stats_row">  
+                        <span class="stats_cell stats_cell--first stats_label">Réponses incorrectes</span>
+                        <div class="stats_row stats_row--mobile hide_desktop">
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--1 panel_label">Normal</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--2 panel_label">Difficile</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--3 panel_label">Infernal</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--4 panel_label">Extrême</span>
+                        </div>
+                        <span class="stats_cell stats_value js-wrong-answers" rel="Normal">0</span>
+                        <span class="stats_cell stats_value js-wrong-answers" rel="Difficile">0</span>
+                        <span class="stats_cell stats_value js-wrong-answers" rel="Infernal">0</span>
+                        <span class="stats_cell stats_value js-wrong-answers" rel="Extrême">0</span>
+                    </div>
+                    <div class="stats_row">  
+                        <span class="stats_cell stats_cell--first stats_label">Meilleurs scores</span>
+                        <div class="stats_row stats_row--mobile hide_desktop">
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--1 panel_label">Normal</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--2 panel_label">Difficile</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--3 panel_label">Infernal</span>
+                            <span class="stats_cell stats_cell--header leaderboard__title leaderboard__title--4 panel_label">Extrême</span>
+                        </div>
+                        <span class="stats_cell stats_value js-best-score" rel="Normal">0</span>
+                        <span class="stats_cell stats_value js-best-score" rel="Difficile">0</span>
+                        <span class="stats_cell stats_value js-best-score" rel="Infernal">0</span>
+                        <span class="stats_cell stats_value js-best-score" rel="Extrême">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel_tabs__section js-tab-section" rel="leaderboard">
+                <div class="panel_box__box js-leaderboard-content"></div>
+            </div>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

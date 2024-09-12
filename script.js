@@ -230,6 +230,8 @@ const APPController = (function(UICtrl, APICtrl) {
                 $('.js-settings').addClass('visible');
                 $('.js-bar-top').addClass('visible');
                 $('.js-login').removeClass('visible');
+                updateStatsGamesPlayed();
+                updateStatsAnswers();
             }
             $('#wrapper').addClass('initialized');
         });
@@ -435,13 +437,15 @@ const APPController = (function(UICtrl, APICtrl) {
             if(streakBonus > 0)
                 $('.js-streak-wrapper').addClass('active');
             $('.js-streak').text(streakBonus > 0 ? streakBonus : '');
-            updateScore(POINTSBYANSWER * POINTSMULTIPLICATOR);
+            updateScore(POINTSBYANSWER * POINTSMULTIPLICATOR);            
+        	playerData.good_answers[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] += 1;
         }
         else {
             if(PRODMODE)
                 updateAssignedTracks(name, currentTrack);
             playSound(soundWrong);
             that.addClass('incorrect');
+        	playerData.wrong_answers[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] += 1;
             resetStreak();
         }
         nextTrack();
@@ -467,7 +471,8 @@ const APPController = (function(UICtrl, APICtrl) {
             audioPlayer.pause();
             audioPlayer.currentTime = 0;
             $('.js-answers').removeClass('playing');
-            playSound(soundWrong);            
+            playSound(soundWrong);
+        	playerData.wrong_answers[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] += 1;
             resetStreak();
             nextTrack();
         }
@@ -630,6 +635,14 @@ const APPController = (function(UICtrl, APICtrl) {
         // Update scores
         playerData.scores.push([DIFFICULTYNAMES[DIFFICULTYLEVEL-1], TRACKSBYGAME, score]);
         updateScores(playerData.scores);
+        // Update games played
+        playerData.games_played[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] += 1;
+        updateStatsGamesPlayed();
+        updateGamesPlayed(playerData.games_played);
+        // Update good/bad answers        
+        updateStatsAnswers();
+        updateAnswers(playerData.good_answers, playerData.wrong_answers);
+        // Update bad answers
         // End game
         $('.js-wrapper').removeClass('game_started');
         $('.js-wrapper').addClass('game_ended');
@@ -666,6 +679,24 @@ const APPController = (function(UICtrl, APICtrl) {
                 $('.score_increment').remove();
             }, 1010);
         }
+    }
+
+    function updateStatsGamesPlayed() {
+    	$('.js-games-played').each(function() {
+    		var level = $(this).attr('rel');
+    		$(this).text(playerData.games_played[level]);
+    	});
+    }
+
+    function updateStatsAnswers() {
+    	$('.js-good-answers').each(function() {
+    		var level = $(this).attr('rel');
+    		$(this).text(playerData.good_answers[level]);
+    	});
+    	$('.js-wrong-answers').each(function() {
+    		var level = $(this).attr('rel');
+    		$(this).text(playerData.wrong_answers[level]);
+    	});
     }
 
     function resetStreak() {
@@ -778,6 +809,24 @@ async function updateScores(scores) {
         .from("scores")
         .update({ 'scores': scores })
         .eq('name', USERNAME);
+    if(error != null)
+        console.log(error);
+}
+
+async function updateGamesPlayed(amount) {
+    const { error } = await _supabase
+        .from("profiles")
+        .update({ 'games_played': amount })
+        .eq('userkey', USERKEY);
+    if(error != null)
+        console.log(error);
+}
+
+async function updateAnswers(good, wrong) {
+    const { error } = await _supabase
+        .from("profiles")
+        .update({ 'good_answers': good, 'wrong_answers': wrong })
+        .eq('userkey', USERKEY);
     if(error != null)
         console.log(error);
 }

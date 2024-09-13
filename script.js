@@ -304,7 +304,6 @@ const APPController = (function(UICtrl, APICtrl) {
     // Set difficulty level
     $('.js-input-difficulty').on('change', function() {
         var difficultyName = $(this).find('+ label').text();
-        console.log(difficultyName);
         DIFFICULTYLEVEL = $(this).val();
         POINTSMULTIPLICATOR = DIFFICULTYLEVEL;
         $('.js-difficulty').text(difficultyName);
@@ -529,8 +528,8 @@ const APPController = (function(UICtrl, APICtrl) {
                 if(scores == null)
                     continue;
                 var name = result[element].name;
-                for(var score in scores) {
-                    var [difficulty, tracks, points] = scores[score];
+                for(var currendScore in scores) {
+                    var [difficulty, tracks, points] = scores[currendScore];
                     leaderboard[difficulty].push([name, tracks, points]);
                 }
             }
@@ -543,11 +542,11 @@ const APPController = (function(UICtrl, APICtrl) {
                 var scoresList = $('<ul class="leaderboard__list"></ul>');
                 scoresList.append($('<li class="leaderboard__item"><span class="leaderboard__value--head leaderboard__value--name">Joueur</span><span class="leaderboard__value--head leaderboard__value--tracks">Nombre de morceaux</span><span class="leaderboard__value--head leaderboard__value--points">Score</span></li>'));
                 var i = 0;
-                for(var score in leaderboard[label]) {
+                for(var currentScore in leaderboard[label]) {
                     i +=1;
                     if(i > 20)
                         break;
-                    var [name, tracks, points] = leaderboard[label][score];
+                    var [name, tracks, points] = leaderboard[label][currentScore];
                     var scoresItem = $('<li class="leaderboard__item"></li>')
                     scoresItem.append($('<span class="leaderboard__value leaderboard__value--name">' + name + '</span>'));
                     scoresItem.append($('<span class="leaderboard__value leaderboard__value--tracks">' + tracks + '</span>'));
@@ -721,15 +720,12 @@ const APPController = (function(UICtrl, APICtrl) {
             "Extrême": 0
         }
 
-        for(score in playerData.scores) {
-            console.log(111);
-            var currentData = playerData.scores[score];
+        for(scoreItem in playerData.scores) {
+            var currentData = playerData.scores[scoreItem];
             var currentDifficulty = currentData[0];
             var currentScore = currentData[2];
             bestScores[currentDifficulty] = bestScores[currentDifficulty] > currentScore ? bestScores[currentDifficulty] : currentScore;
         }
-
-        console.log(bestScores);
 
         $('.js-best-score').each(function() {
             var level = $(this).attr('rel');

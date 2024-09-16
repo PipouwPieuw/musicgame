@@ -1303,7 +1303,7 @@ svg path,
 		font-size: 14px;
 	}
 	.leaderboard__value:not(.leaderboard__value--head) {
-		font-size: 18px;
+		font-size: 15px;
 	}
 	.leaderboard__value--head.leaderboard__value--tracks {
 		display: flex;

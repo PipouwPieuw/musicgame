@@ -544,7 +544,7 @@ const APPController = (function(UICtrl, APICtrl) {
                 var i = 0;
                 for(var currentScore in leaderboard[label]) {
                     i +=1;
-                    if(i > 20)
+                    if(i > 10)
                         break;
                     var [name, tracks, points] = leaderboard[label][currentScore];
                     var scoresItem = $('<li class="leaderboard__item"></li>')

@@ -521,7 +521,7 @@ const APPController = (function(UICtrl, APICtrl) {
         getAllScores().then(function(result) {
             var leaderboard = {}
             for(var difficulty in DIFFICULTYNAMES) {
-                leaderboard[DIFFICULTYNAMES[difficulty]]= [];
+                leaderboard[DIFFICULTYNAMES[difficulty]]= {};
             }
             for(var element in result) {
                 var scores = result[element].scores;
@@ -530,22 +530,35 @@ const APPController = (function(UICtrl, APICtrl) {
                 var name = result[element].name;
                 for(var currendScore in scores) {
                     var [difficulty, tracks, points] = scores[currendScore];
-                    leaderboard[difficulty].push([name, tracks, points]);
+                	if(!(name in leaderboard[difficulty]))
+                		leaderboard[difficulty][name] = [name, tracks, points];
+                	else if(leaderboard[difficulty][name][2] < points)
+                		leaderboard[difficulty][name] = [name, tracks, points];
+                    // leaderboard[difficulty].push([name, tracks, points]);
                 }
             }
+            // Keep only best score for each player
+            for(var difficulty in DIFFICULTYNAMES) {
+            	var difficultyTable = [];
+            	for(var playerName in leaderboard[DIFFICULTYNAMES[difficulty]])
+            		difficultyTable.push(leaderboard[DIFFICULTYNAMES[difficulty]][playerName]);
+            	difficultyTable.sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
+            	leaderboard[DIFFICULTYNAMES[difficulty]] = difficultyTable;
+            }
+            // Display leaderboard
             var counter = 0;
             for(var difficulty in DIFFICULTYNAMES) {
                 counter += 1;
                 var label = DIFFICULTYNAMES[difficulty];
                 $('.js-leaderboard-content').append('<span class="leaderboard__title leaderboard__title--' + counter + ' panel_label">' + label + '</span>');
-                leaderboard[label].sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
+                // leaderboard[label].sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
                 var scoresList = $('<ul class="leaderboard__list"></ul>');
                 scoresList.append($('<li class="leaderboard__item"><span class="leaderboard__value--head leaderboard__value--name">Joueur</span><span class="leaderboard__value--head leaderboard__value--tracks">Nombre de morceaux</span><span class="leaderboard__value--head leaderboard__value--points">Score</span></li>'));
                 var i = 0;
                 for(var currentScore in leaderboard[label]) {
-                    i +=1;
-                    if(i > 10)
-                        break;
+                    // i +=1;
+                    // if(i > 10)
+                    //     break;
                     var [name, tracks, points] = leaderboard[label][currentScore];
                     var scoresItem = $('<li class="leaderboard__item"></li>')
                     scoresItem.append($('<span class="leaderboard__value leaderboard__value--name">' + name + '</span>'));

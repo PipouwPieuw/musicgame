@@ -86,7 +86,7 @@ const APPController = (function(UICtrl, APICtrl) {
 
     // GAME LOGIC
     const SHUFFLE = true;
-    const DEVMODE = true;
+    const DEVMODE = false;
     const PRODMODE = true;
     const DEFAULTANSWERSAMOUNT = 4;
     const DIFFICULTYNAMES = ['Normal', 'Difficile', 'Infernal', 'Extrême'];

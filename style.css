@@ -354,6 +354,13 @@ svg path,
 	border: 4px solid black;
 	border-radius: 0 0 var(--radius) var(--radius);
 }
+.track_display--favorite {
+	border: 0;
+	border-radius: 0;
+}
+.track_display--favorite:not(:last-child) {
+	border-bottom: 4px solid black;
+}
 @media only screen and (max-width: 640px) {
 	.game_display {
 		padding-top: 30px;
@@ -369,6 +376,14 @@ svg path,
 }
 .track_display__half--cover.hidden {
 	display: none;
+}
+.track_display__half--cover_favorite {
+	flex: 0 0 150px;
+	width: 150px;
+}
+.track_display__half--details_favorites {
+	width: auto;
+	flex: 1;
 }
 @media only screen and (max-width: 640px) {
 	.track_display__half--cover {
@@ -483,6 +498,9 @@ svg path,
 @media only screen and (min-width: 641px) {
 	.track_display__cover {
 		height: 284px;
+	}
+	.track_display__cover--favorite {
+		height: 150px;
 	}
 }
 .track_display__cover img {
@@ -845,6 +863,9 @@ svg path,
     padding: 15px;
     display: flex;
     flex-direction: column;
+}
+.panel_box__box--favorite {
+	padding: 0;
 }
 .settings_panel__line {
 	display: flex;
@@ -1358,6 +1379,13 @@ svg path,
 	border-color: darkgray;
 }
 
+@media only screen and (max-width: 640px) {	
+	.panel_tabs__tab {
+		flex: 1;
+		font-size: 16px;
+		padding: 0 12px;
+	}
+}
 .panel_tabs__section:not(.active) {
 	display: none;
 }

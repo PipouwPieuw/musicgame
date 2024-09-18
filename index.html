@@ -144,8 +144,8 @@
                     </span>
                 </div>
                 <button class="track_display__like default_tooltip__wrapper js-like-track" data-liked="false">
-                    <span class="track_display__like_legend default_tooltip default_transition" data-liked="true">Ne plus aimer ce morceau</span>
-                    <span class="track_display__like_legend default_tooltip default_transition" data-liked="false">Aimer ce morceau</span>
+                    <span class="track_display__like_legend default_tooltip default_transition" data-liked="true">Retirer des favoris</span>
+                    <span class="track_display__like_legend default_tooltip default_transition" data-liked="false">Ajouter aux favoris</span>
                 </button>
             </span>
             <div class="track_display__wrapper">
@@ -178,6 +178,7 @@
             <div class="panel_tabs__tabs js-tabs-wrapper">
                 <button class="panel_box__title panel_tabs__tab active js-tab" rel="stats">Statistiques</button>
                 <button class="panel_box__title panel_tabs__tab js-tab" rel="leaderboard">Classement</button>
+                <button class="panel_box__title panel_tabs__tab js-tab" rel="favorites">Favoris</button>
             </div>
             <div class="statistics panel_tabs__section js-tab-section active" rel="stats">
                 <div class="panel_box__box">
@@ -246,6 +247,9 @@
             </div>
             <div class="panel_tabs__section js-tab-section" rel="leaderboard">
                 <div class="panel_box__box js-leaderboard-content"></div>
+            </div>            
+            <div class="statistics panel_tabs__section js-tab-section" rel="favorites">
+                <div class="panel_box__box panel_box__box--favorite js-favorites-content"></div>
             </div>
         </div>
     </div>

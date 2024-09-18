@@ -449,12 +449,15 @@ const APPController = (function(UICtrl, APICtrl) {
     });
 
     // Like track
-    $('.js-like-track').on('click', function() {
+    $(document).on('click', '.js-like-track', function() {
         var currentState = $(this).attr('data-liked') == 'true';
+        var trackIndex = parseInt($(this).attr('data-index'));
+        var activeTrack = typeof trackIndex !== 'undefined' && trackIndex !== false ? trackIndex : currentTrack;
+        console.log(activeTrack);
         if(!currentState)
-            playerData.likedTracks.push(currentTrack);
+            playerData.likedTracks.push(activeTrack);
         else
-            playerData.likedTracks.splice(playerData.likedTracks.indexOf(currentTrack), 1);
+            playerData.likedTracks.splice(playerData.likedTracks.indexOf(activeTrack), 1);
         updateLikedTracks(playerData.likedTracks);
         $(this).attr('data-liked', !currentState);
 
@@ -514,10 +517,12 @@ const APPController = (function(UICtrl, APICtrl) {
             return;
         }
 
+        // Build stats
         updateStatsGamesPlayed();
         updateStatsAnswers();
         updateStatsBestScore();
 
+        // Build leaderboard
         getAllScores().then(function(result) {
             var leaderboard = {}
             for(var difficulty in DIFFICULTYNAMES) {
@@ -570,6 +575,32 @@ const APPController = (function(UICtrl, APICtrl) {
             }
             openLeaderboard();
         });
+
+        // Build favorites
+        for(var index in playerData.likedTracks) {
+        	var trackIndex = playerData.likedTracks[index];
+        	var trackArtistsText = "";
+        	var trackArtists = tracks[trackIndex].track.artists;
+        	for(var trackArtist in trackArtists) {
+                trackArtistsText += trackArtists[trackArtist].name + ", ";
+            }
+            trackArtistsText = trackArtistsText.slice(0, -2);
+        	var trackName = tracks[trackIndex].track.name;
+        	var trackImage = tracks[trackIndex].track.album.images[1].url;
+        	var favoriteElem = $('<div class="track_display track_display--favorite"></div>');
+        	favoriteElem.append('<div class="track_display__half track_display__half--cover track_display__half--cover_favorite"><img class="track_display__cover track_display__cover--favorite" src="' + trackImage + '"/></div>');
+        	var favoriteElemDetails = $('<div class="track_display__details track_display__half track_display__half--details track_display__half--details_favorites"></div>');
+        	var favoriteElemContent = $('<div class="track_display__content"></div>');
+        	favoriteElemContent.append('<div class="track_display__name">' + trackName + '</div>');
+        	favoriteElemContent.append('<div class="track_display__artist">' + trackArtistsText + '</div>');
+        	favoriteElemDetails.append(favoriteElemContent);
+        	var favoriteElemLike = $('<button class="track_display__like default_tooltip__wrapper js-like-track" data-liked="true" data-index="' + trackIndex + '"</button>');
+        	favoriteElemLike.append($('<span class="track_display__like_legend default_tooltip default_transition" data-liked="true">Retirer des favoris</span>'));
+        	favoriteElemLike.append($('<span class="track_display__like_legend default_tooltip default_transition" data-liked="false">Ajouter aux favoris</span>'));
+        	favoriteElemDetails.append(favoriteElemLike);
+        	favoriteElem.append(favoriteElemDetails);
+        	$('.js-favorites-content').append(favoriteElem);
+        }
     });
 
     $('.js-close-leaderboard').on('click', function() {

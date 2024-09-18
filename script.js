@@ -451,9 +451,8 @@ const APPController = (function(UICtrl, APICtrl) {
     // Like track
     $(document).on('click', '.js-like-track', function() {
         var currentState = $(this).attr('data-liked') == 'true';
-        var trackIndex = parseInt($(this).attr('data-index'));
-        var activeTrack = typeof trackIndex !== 'undefined' && trackIndex !== false ? trackIndex : currentTrack;
-        console.log(activeTrack);
+        var trackIndex = $(this).attr('data-index');
+        var activeTrack = typeof trackIndex !== 'undefined' && trackIndex !== false ? parseInt(trackIndex) : currentTrack;
         if(!currentState)
             playerData.likedTracks.push(activeTrack);
         else

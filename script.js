@@ -86,8 +86,8 @@ const APPController = (function(UICtrl, APICtrl) {
 
     // GAME LOGIC
     const SHUFFLE = true;
-    const DEVMODE = false;
-    const PRODMODE = true;
+    const DEVMODE = true;
+    const PRODMODE = false;
     const DEFAULTANSWERSAMOUNT = 4;
     const DIFFICULTYNAMES = ['Normal', 'Difficile', 'Infernal', 'Extrême'];
     var MINSTREAK = 3;
@@ -285,8 +285,6 @@ const APPController = (function(UICtrl, APICtrl) {
     $('.js-nb-tracks').on('keyup mouseup', function() {
         if(+$(this).val() < +$(this).attr('min'))
             $(this).val($(this).attr('min'));
-        else if(+$(this).val() > tracks.length)
-            $(this).val(tracks.length);
         TRACKSBYGAME = +$(this).val();
         tracksByPlayer = Math.floor(TRACKSBYGAME / playersData.length);
     });

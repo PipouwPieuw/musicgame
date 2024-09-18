@@ -285,6 +285,8 @@ const APPController = (function(UICtrl, APICtrl) {
     $('.js-nb-tracks').on('keyup mouseup', function() {
         if(+$(this).val() < +$(this).attr('min'))
             $(this).val($(this).attr('min'));
+        else if(+$(this).val() > tracks.length)
+            $(this).val(tracks.length);
         TRACKSBYGAME = +$(this).val();
         tracksByPlayer = Math.floor(TRACKSBYGAME / playersData.length);
     });

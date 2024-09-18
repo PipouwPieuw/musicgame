@@ -182,7 +182,8 @@ const APPController = (function(UICtrl, APICtrl) {
         if(SHUFFLE) {
             setList = shuffleArray(setList);
         }
-        setListLength = setList.length;        
+        setListLength = setList.length;
+        TRACKSBYGAME = setListLength;
         $('.js-track-total').text(setListLength);
         minScore = setListLength - setListLength / 5;
     }

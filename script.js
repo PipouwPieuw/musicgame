@@ -525,6 +525,9 @@ const APPController = (function(UICtrl, APICtrl) {
             return;
         }
 
+        if($('.js-wrapper').hasClass('game_ended'))
+        	quitGame();
+
         // Build stats
         updateStatsGamesPlayed();
         updateStatsAnswers();

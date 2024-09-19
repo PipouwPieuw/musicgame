@@ -224,7 +224,15 @@ const APPController = (function(UICtrl, APICtrl) {
         // totalTracks = tracks.total;        
         getPlayerData().then(function(result) {
             if(result.id != null) {
-                playerData = result;                
+                playerData = result;
+                // Get current player tracks
+                for(var playerIndex in playersData) {
+                	var currentPlayer = playersData[playerIndex];
+                	if(currentPlayer[2] == playerData.initials) {
+                		playerData.tracks = currentPlayer[1];
+                		break;
+                	}
+                }
                 getScores().then(function(result) {
                     playerData.scores = result[0].scores || [];
                 });
@@ -579,6 +587,7 @@ const APPController = (function(UICtrl, APICtrl) {
         // Build favorites
         for(var index in playerData.likedTracks) {
         	var trackIndex = playerData.likedTracks[index];
+        	// Tracks infos
         	var trackArtistsText = "";
         	var trackArtists = tracks[trackIndex].track.artists;
         	for(var trackArtist in trackArtists) {
@@ -587,6 +596,7 @@ const APPController = (function(UICtrl, APICtrl) {
             trackArtistsText = trackArtistsText.slice(0, -2);
         	var trackName = tracks[trackIndex].track.name;
         	var trackImage = tracks[trackIndex].track.album.images[1].url;
+        		// Build HTML
         	var favoriteElem = $('<div class="track_display track_display--favorite"></div>');
         	favoriteElem.append('<div class="track_display__half track_display__half--cover track_display__half--cover_favorite"><img class="track_display__cover track_display__cover--favorite" src="' + trackImage + '"/></div>');
         	var favoriteElemDetails = $('<div class="track_display__details track_display__half track_display__half--details track_display__half--details_favorites"></div>');
@@ -601,6 +611,63 @@ const APPController = (function(UICtrl, APICtrl) {
         	favoriteElem.append(favoriteElemDetails);
         	$('.js-favorites-content').append(favoriteElem);
         }
+
+        // Build liked tracks
+        getLikedTracks().then(function(result) {
+        	var resultObject = {};
+        	var likedTracks = result;
+        	var hasLikes = false;
+        	// console.log(likedTracks);
+        	// console.log(playerData);
+
+        	for(var index in likedTracks) {
+        		var row = likedTracks[index];
+        		if(row.likedTracks == null)
+        			continue;
+        		var hasLikes = true;
+        		for(var trackIndex in row.likedTracks) {
+        			if(playerData.tracks.includes(row.likedTracks[trackIndex])) {
+        				if (row.likedTracks[trackIndex] in resultObject)
+        					resultObject[row.likedTracks[trackIndex]].push(row.initials);
+        				else
+        					resultObject[row.likedTracks[trackIndex]] = [row.initials];
+        			}
+        		}
+        	}
+
+        	if(!hasLikes) {
+        		$('.js-liked-tracks-wrapper').addClass('visually_hidden');
+        		return;
+        	}
+
+        	for(var index in resultObject) {
+        		// Tracks infos
+	        	var trackArtistsText = "";
+	        	var trackArtists = tracks[index].track.artists;
+	        	for(var trackArtist in trackArtists) {
+	                trackArtistsText += trackArtists[trackArtist].name + ", ";
+	            }     		
+            	trackArtistsText = trackArtistsText.slice(0, -2);
+        		var trackName = tracks[index].track.name;
+        		var trackImage = tracks[index].track.album.images[1].url;   
+        		// Build HTML
+        		var likedElem = $('<div class="liked_track"></div>');
+        		likedElem.append('<div class="liked_track__image"><img class="liked_track__cover" src="' + trackImage + '"/></div>');
+	        	var likedElemDetails = $('<div class="liked_track__details"></div>');
+	        	var likedElemContent = $('<div class="liked_track__content"></div>');
+	        	likedElemContent.append('<div class="liked_track__name">' + trackName + '</div>');
+	        	likedElemContent.append('<div class="liked_track__artist">' + trackArtistsText + '</div>');
+	        	var likedElemAvatars = $('<div class="liked_track__avatars"></div>');
+	        	for(userIndex in resultObject[index]) {
+	        		likedElemAvatars.append('<div class="liked_track__user"><img src="assets/avatars/' + resultObject[index][userIndex] + '.png"/></div>');
+	        	}
+	        	likedElemContent.append(likedElemAvatars);
+	        	likedElemDetails.append(likedElemContent);
+	        	likedElem.append(likedElemDetails);
+        		$('.js-liked-tracks').append(likedElem);
+        		$('.js-liked-tracks-wrapper').removeClass('visually_hidden');
+        	}
+        });
     });
 
     $('.js-close-leaderboard').on('click', function() {
@@ -818,6 +885,8 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-display-leaderboard').removeClass('active');
         $('.js-logout-button').removeClass('hidden');
         $('.js-leaderboard-content').empty();
+        $('.js-favorites-content').empty();
+        $('.js-liked-tracks').empty();
     }
 
     return {
@@ -835,10 +904,10 @@ APPController.init();
 async function getGameData() {
     const { data, error } = await _supabase
         .from('names')
-        .select('name, tracks');
+        .select('name, tracks, initials');
     var res = [];
     for(elem in data)
-        res.push([data[elem].name, data[elem].tracks]);
+        res.push([data[elem].name, data[elem].tracks, data[elem].initials]);
     return res;
 }
 
@@ -864,6 +933,17 @@ async function getScores() {
         .from("scores")
         .select('scores')
         .eq('name', USERNAME);
+    if(error != null)
+        console.log(error);
+    if(data == null)
+        data = [];
+    return data;
+}
+
+async function getLikedTracks() {
+    const { data, error } = await _supabase
+        .from("profiles")
+        .select('initials, likedTracks');
     if(error != null)
         console.log(error);
     if(data == null)

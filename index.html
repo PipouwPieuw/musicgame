@@ -176,11 +176,14 @@
         </div>
         <div class="leaderboard panel_box js-leaderboard">
             <div class="panel_tabs__tabs js-tabs-wrapper">
-                <button class="panel_box__title panel_tabs__tab active js-tab" rel="stats">Statistiques</button>
-                <button class="panel_box__title panel_tabs__tab js-tab" rel="leaderboard">Classement</button>
+                <button class="panel_box__title panel_tabs__tab active js-tab" rel="leaderboard">Classement</button>
+                <button class="panel_box__title panel_tabs__tab js-tab" rel="stats">Statistiques</button>
                 <button class="panel_box__title panel_tabs__tab js-tab" rel="favorites">Favoris</button>
             </div>
-            <div class="statistics panel_tabs__section js-tab-section active" rel="stats">
+            <div class="panel_tabs__section js-tab-section active" rel="leaderboard">
+                <div class="panel_box__box js-leaderboard-content"></div>
+            </div>   
+            <div class="statistics panel_tabs__section js-tab-section" rel="stats">
                 <div class="panel_box__box">
                     <div class="stats_row hide_mobile">                 
                         <span class="stats_cell stats_cell--first"></span>
@@ -248,10 +251,7 @@
                         <div class="stats_liked js-liked-tracks"></div>
                     </div>
                 </div>
-            </div>
-            <div class="panel_tabs__section js-tab-section" rel="leaderboard">
-                <div class="panel_box__box js-leaderboard-content"></div>
-            </div>            
+            </div>         
             <div class="statistics panel_tabs__section js-tab-section" rel="favorites">
                 <div class="panel_box__box panel_box__box--favorite js-favorites-content"></div>
             </div>

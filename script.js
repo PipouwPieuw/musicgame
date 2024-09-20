@@ -91,6 +91,7 @@ const APPController = (function(UICtrl, APICtrl) {
     const DEFAULTANSWERSAMOUNT = 4;
     const DIFFICULTYNAMES = ['Normal', 'Difficile', 'Infernal', 'Extrême'];
     var MINSTREAK = 3;
+    var DEFAULTTRACKSBYGAME = 40;
     var TRACKSBYGAME = 40;
     var ANSWERSAMOUNT = 4;
     var DIFFICULTYLEVEL = 1;
@@ -536,8 +537,10 @@ const APPController = (function(UICtrl, APICtrl) {
         // Build leaderboard
         getAllScores().then(function(result) {
             var leaderboard = {}
+            var leaderboardCustom = {}
             for(var difficulty in DIFFICULTYNAMES) {
                 leaderboard[DIFFICULTYNAMES[difficulty]]= {};
+                leaderboardCustom[DIFFICULTYNAMES[difficulty]]= {};
             }
             for(var element in result) {
                 var scores = result[element].scores;
@@ -546,44 +549,40 @@ const APPController = (function(UICtrl, APICtrl) {
                 var name = result[element].name;
                 for(var currendScore in scores) {
                     var [difficulty, tracks, points] = scores[currendScore];
-                	if(!(name in leaderboard[difficulty]))
-                		leaderboard[difficulty][name] = [name, tracks, points];
-                	else if(leaderboard[difficulty][name][2] < points)
-                		leaderboard[difficulty][name] = [name, tracks, points];
-                    // leaderboard[difficulty].push([name, tracks, points]);
+                    // Build custom leaderboard
+                    if(tracks > DEFAULTTRACKSBYGAME) {
+                        if(!(name in leaderboardCustom[difficulty]))
+                            leaderboardCustom[difficulty][name] = [name, tracks, points];
+                        else if(leaderboardCustom[difficulty][name][2] < points)
+                            leaderboardCustom[difficulty][name] = [name, tracks, points];                        
+                    }
+                    // Build default leaderboard
+                    else {
+                        if(!(name in leaderboard[difficulty]))
+                            leaderboard[difficulty][name] = [name, tracks, points];
+                        else if(leaderboard[difficulty][name][2] < points)
+                            leaderboard[difficulty][name] = [name, tracks, points];
+                    }
                 }
             }
             // Keep only best score for each player
             for(var difficulty in DIFFICULTYNAMES) {
-            	var difficultyTable = [];
+                // Leaderboard custom
+                var difficultyTableCustom = [];
+                for(var playerName in leaderboardCustom[DIFFICULTYNAMES[difficulty]])
+                    difficultyTableCustom.push(leaderboardCustom[DIFFICULTYNAMES[difficulty]][playerName]);
+                difficultyTableCustom.sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
+                leaderboardCustom[DIFFICULTYNAMES[difficulty]] = difficultyTableCustom;                
+                // Leaderboard default
+                var difficultyTable = [];
             	for(var playerName in leaderboard[DIFFICULTYNAMES[difficulty]])
             		difficultyTable.push(leaderboard[DIFFICULTYNAMES[difficulty]][playerName]);
             	difficultyTable.sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
             	leaderboard[DIFFICULTYNAMES[difficulty]] = difficultyTable;
             }
             // Display leaderboard
-            var counter = 0;
-            for(var difficulty in DIFFICULTYNAMES) {
-                counter += 1;
-                var label = DIFFICULTYNAMES[difficulty];
-                $('.js-leaderboard-content').append('<span class="leaderboard__title leaderboard__title--' + counter + ' panel_label">' + label + '</span>');
-                // leaderboard[label].sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
-                var scoresList = $('<ul class="leaderboard__list"></ul>');
-                scoresList.append($('<li class="leaderboard__item"><span class="leaderboard__value--head leaderboard__value--name">Joueur</span><span class="leaderboard__value--head leaderboard__value--tracks">Nombre de morceaux</span><span class="leaderboard__value--head leaderboard__value--points">Score</span></li>'));
-                var i = 0;
-                for(var currentScore in leaderboard[label]) {
-                    // i +=1;
-                    // if(i > 10)
-                    //     break;
-                    var [name, tracks, points] = leaderboard[label][currentScore];
-                    var scoresItem = $('<li class="leaderboard__item"></li>')
-                    scoresItem.append($('<span class="leaderboard__value leaderboard__value--name">' + name + '</span>'));
-                    scoresItem.append($('<span class="leaderboard__value leaderboard__value--tracks">' + tracks + '</span>'));
-                    scoresItem.append($('<span class="leaderboard__value leaderboard__value--points">' + points + '</span>'));
-                    scoresList.append(scoresItem);
-                }
-                $('.js-leaderboard-content').append(scoresList);
-            }
+            buildLeaderboard(leaderboard, "Classement parties classiques");
+            buildLeaderboard(leaderboardCustom, "Classement parties personnalisées");
             openLeaderboard();
         });
 
@@ -687,6 +686,30 @@ const APPController = (function(UICtrl, APICtrl) {
         $(this).addClass('active');
         $('.js-tab-section[rel="' + target + '"]').addClass('active');
     });
+
+    function buildLeaderboard(object, title) {        
+        var counter = 0;
+        $('.js-leaderboard-content').append('<span class="leaderboard__section_title">' + title + '</span>');
+        for(var difficulty in DIFFICULTYNAMES) {
+            counter += 1;
+            var label = DIFFICULTYNAMES[difficulty];
+            if(object[label].length == 0)
+                continue;
+            $('.js-leaderboard-content').append('<span class="leaderboard__title leaderboard__title--' + counter + ' panel_label">' + label + '</span>');
+            var scoresList = $('<ul class="leaderboard__list"></ul>');
+            scoresList.append($('<li class="leaderboard__item"><span class="leaderboard__value--head leaderboard__value--name">Joueur</span><span class="leaderboard__value--head leaderboard__value--tracks">Nombre de morceaux</span><span class="leaderboard__value--head leaderboard__value--points">Score</span></li>'));
+            var i = 0;
+            for(var currentScore in object[label]) {
+                var [name, tracks, points] = object[label][currentScore];
+                var scoresItem = $('<li class="leaderboard__item"></li>')
+                scoresItem.append($('<span class="leaderboard__value leaderboard__value--name">' + name + '</span>'));
+                scoresItem.append($('<span class="leaderboard__value leaderboard__value--tracks">' + tracks + '</span>'));
+                scoresItem.append($('<span class="leaderboard__value leaderboard__value--points">' + points + '</span>'));
+                scoresList.append(scoresItem);
+            }
+            $('.js-leaderboard-content').append(scoresList);
+        }
+    }
 
     function resetCountdownBar(value = '100%', transition = 0) {
         $('.js-countdown-bar').css('width', value);

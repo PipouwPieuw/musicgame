@@ -1272,7 +1272,15 @@ svg path,
 	font-size: 30px;
 	font-weight: 700;
 	text-align: center;
-}}
+}
+.leaderboard__section_title {
+	display: block;
+	margin-bottom: 30px;
+	font-size: 28px;
+	font-weight: 700;
+	text-align: center;
+	margin-top: 15px;
+}
 .leaderboard__title {
 	display: block;
 	margin-bottom: 10px;
@@ -1406,7 +1414,7 @@ svg path,
 	display: flex;
 	margin-top: 8px;
 	padding-top: 8px;
-	border-top: 1px solid black;
+	border-top: 2px solid black;
 }
 .liked_track__image {
 	flex: 0 0 150px;

@@ -332,6 +332,9 @@ const APPController = (function(UICtrl, APICtrl) {
             $('.js-track-cover').addClass('hidden');
         }
 
+        // Display like button
+        $('.js-like-button').toggleClass('visually_hidden', DIFFICULTYLEVEL > 2);
+
         // Answers display
         DISPLAYAVATARS = DIFFICULTYLEVEL > 3;
 

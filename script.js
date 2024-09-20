@@ -705,7 +705,15 @@ const APPController = (function(UICtrl, APICtrl) {
         USERKEY = $('.js-userkey').val().toLowerCase();
         getPlayerData().then(function(result) {
             if(result.id != null) {
-                playerData = result;                
+                playerData = result;
+                // Get current player tracks
+                for(var playerIndex in playersData) {
+                    var currentPlayer = playersData[playerIndex];
+                    if(currentPlayer[2] == playerData.initials) {
+                        playerData.tracks = currentPlayer[1];
+                        break;
+                    }
+                }
                 getScores().then(function(result) {
                     playerData.scores = result[0].scores || [];
                 });

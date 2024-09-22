@@ -1490,6 +1490,11 @@ body.no_glitch .text_glitch {
 	font-size: 12px;
 	color: darkgray;
 }
+.liked_track__amount {
+	font-size: 26px;
+	margin-top: 16px;
+	font-weight: 700;
+}
 .liked_track__avatars {
 	margin-top: 4px;
 	display: flex;

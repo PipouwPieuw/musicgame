@@ -121,6 +121,7 @@ const APPController = (function(UICtrl, APICtrl) {
     var jsAudioPlayer = $('.js-audio-player');
     var jsAudioPlayerHardcore = $('.js-audio-player-hardcore');
     var soundRight = new Audio('assets/right.m4a');
+    soundRight.volume = 0.5;
     var soundWrong = new Audio('assets/wrong.m4a');
     // Data
     var playersData = [];
@@ -711,6 +712,61 @@ const APPController = (function(UICtrl, APICtrl) {
         		$('.js-liked-tracks-wrapper').removeClass('visually_hidden');
         	}
         });
+
+        // Build assigned tracks
+        getAssignedTracks(playerData.initials).then(function(result) {
+            var assignedTracks = result[0].assigned_tracks;
+            var assignedTracksSorted = [];
+            var assignedTracksPodium = {};
+            var hasTracks = false;
+            for(var trackIndex in assignedTracks) {
+                assignedTracksSorted.push([trackIndex, assignedTracks[trackIndex]]);                
+                var hasTracks = true;
+            }
+            if(!hasTracks) {
+                $('.js-assigned-tracks-wrapper').addClass('visually_hidden');
+                return;
+            }
+            assignedTracksSorted.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
+            for(var i=1;i<=3;i++) {
+                var assignedTrack = assignedTracksSorted.shift();
+                assignedTracksPodium[i] = [assignedTrack];
+                while(assignedTracksSorted[0][1] == assignedTrack[1])
+                    assignedTracksPodium[i].push(assignedTracksSorted.shift());
+            }
+            for(var position in assignedTracksPodium) {
+                var assignedTrackRow = $('<div class="assigned_tracks_row"></div>');
+                assignedTrackRow.append($('<div class="assigned_tracks_position">' + position + '</div>'));
+                var assignedTrackContent = $('<div class="assigned_tracks_content"></div>');
+                for(var index in assignedTracksPodium[position]) {
+                    var trackIndex = parseInt(assignedTracksPodium[position][index][0]);
+                    var trackAmount = parseInt(assignedTracksPodium[position][index][1]);
+                    // Tracks infos
+                    var trackArtistsText = "";
+                    var trackArtists = tracks[trackIndex].track.artists;
+                    for(var trackArtist in trackArtists) {
+                        trackArtistsText += trackArtists[trackArtist].name + ", ";
+                    }           
+                    trackArtistsText = trackArtistsText.slice(0, -2);
+                    var trackName = tracks[trackIndex].track.name;
+                    var trackImage = tracks[trackIndex].track.album.images[1].url;
+                    // Build HTML
+                    var assignedElem = $('<div class="liked_track"></div>');
+                    assignedElem.append('<div class="liked_track__image"><img class="liked_track__cover" src="' + trackImage + '"/></div>');
+                    var assignedElemDetails = $('<div class="liked_track__details"></div>');
+                    var assignedElemContent = $('<div class="liked_track__content"></div>');
+                    assignedElemContent.append('<div class="liked_track__name">' + trackName + '</div>');
+                    assignedElemContent.append('<div class="liked_track__artist">' + trackArtistsText + '</div>');
+                    assignedElemContent.append($('<div class="liked_track__amount">' + trackAmount + ' fois</trackAmountdiv>'));
+                    assignedElemDetails.append(assignedElemContent);
+                    assignedElem.append(assignedElemDetails);
+                    assignedTrackContent.append(assignedElem);
+                }
+                assignedTrackRow.append(assignedTrackContent);
+                $('.js-assigned-tracks').append(assignedTrackRow);
+                $('.js-assigned-tracks-wrapper').removeClass('visually_hidden');
+            }
+        });
     });
 
     $('.js-close-leaderboard').on('click', function() {
@@ -979,6 +1035,7 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-leaderboard-content').empty();
         $('.js-favorites-content').empty();
         $('.js-liked-tracks').empty();
+        $('.js-assigned-tracks').empty();
     }
 
     return {
@@ -1051,6 +1108,18 @@ async function getAllScores() {
         console.log(error);
     if(data == null)
         data = [];
+    return data;
+}
+
+async function getAssignedTracks(initials) {
+    const { data, error } = await _supabase
+        .from("names")
+        .select('assigned_tracks')
+        .eq('initials', initials);
+    if(error != null)
+        console.log(error);
+    if(data == null)
+        data = {};
     return data;
 }
 

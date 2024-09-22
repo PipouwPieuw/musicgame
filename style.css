@@ -1,5 +1,6 @@
 :root {
 	--radius: 8px;
+	--glitchedOpacity: 0;
 }
 * {
 	box-sizing: border-box;
@@ -13,6 +14,18 @@ body {
 }
 body.no_scroll {
 	overflow: hidden;
+}
+body.glitched .text_symbol,
+body.glitched_halfgame .text_symbol_halfgame {
+	font-family: "Yarndings 12", system-ui;
+}
+body.glitched:before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	background-color: black;
+	opacity: var(--glitchedOpacity);
 }
 ul {
 	list-style: none;
@@ -80,7 +93,10 @@ svg path,
 #wrapper.game_started .start_game,
 #wrapper.game_ended .start_game,
 #wrapper:not(.game_ended) .end_game,
-.visually_hidden {
+.visually_hidden,
+body.glitched:not(.no_glitch) .text_no_glitch,
+body:not(.glitched) .text_glitch,
+body.no_glitch .text_glitch {
 	display: none;
 }
 
@@ -865,6 +881,11 @@ svg path,
     display: flex;
     flex-direction: column;
 }
+@media only screen and (max-width: 640px) {
+	.statistics > .panel_box__box {
+		padding: 5px;
+	}
+}
 .panel_box__box--favorite {
 	padding: 0;
 }
@@ -1008,6 +1029,10 @@ svg path,
 .settings_difficulty__radio:has(~ .settings_difficulty__radio:checked) + label span {
 	color: white;
 }
+.settings_difficulty__radio + label span {
+	position: relative;
+	z-index: 1;
+}
 .settings_difficulty__radio + label:before {
 	content: '';
 	width: 30px;
@@ -1037,6 +1062,10 @@ svg path,
 .settings_difficulty__radio--4 + label,
 .settings_difficulty__radio--4 + label:before {
 	background: #bbbbbb;
+}
+.settings_difficulty__radio--5 + label,
+.settings_difficulty__radio--5 + label:before {
+	background: #aaaaaa;
 }
 @media only screen and (max-width: 640px) {
 	.settings_difficulty__radio + label span {
@@ -1087,6 +1116,27 @@ svg path,
 .settings_difficulty__radio--4:checked + label,
 .settings_difficulty__radio--4:checked + label:before {
 	background-color: #3B0042;
+}
+
+.settings_difficulty__radio--1 + label:has(~ .settings_difficulty__radio--5:checked),
+.settings_difficulty__radio--1 + label:has(~ .settings_difficulty__radio--5:checked):before {
+	background-color: #444444;
+}
+.settings_difficulty__radio--2 + label:has(~ .settings_difficulty__radio--5:checked),
+.settings_difficulty__radio--2 + label:has(~ .settings_difficulty__radio--5:checked):before {
+	background-color: #333333;
+}
+.settings_difficulty__radio--3 + label:has(~ .settings_difficulty__radio--5:checked),
+.settings_difficulty__radio--3 + label:has(~ .settings_difficulty__radio--5:checked):before {
+	background-color: #222222;
+}
+.settings_difficulty__radio--4 + label:has(~ .settings_difficulty__radio--5:checked),
+.settings_difficulty__radio--4 + label:has(~ .settings_difficulty__radio--5:checked):before {
+	background-color: #111111;
+}
+.settings_difficulty__radio--5:checked + label,
+.settings_difficulty__radio--5:checked + label:before {
+	background-color: #000000;
 }
 .settings_difficulty__details:not(.visible) {
 	display: none;
@@ -1200,15 +1250,20 @@ svg path,
 	border: 0;
 }
 .stats_cell {
-	flex: 0 0 calc((100% - 180px) / 4);
+	flex: 0 0 calc((100% - 100px) / 5);
 }
 @media only screen and (max-width: 640px) {	
 	.stats_cell {
-		flex: 0 0 25%;
+		flex: 0 0 20%;
+	}
+	.stats_row.hide_mobile + .stats_row {
+		border-top: 0;
+		margin-top: 0;
+		padding-top: 0;
 	}
 }
 .stats_cell--first {
-	flex: 0 0 180px;
+	flex: 0 0 100px;
 }
 @media only screen and (max-width: 640px) {	
 	.stats_cell--first {
@@ -1228,7 +1283,7 @@ svg path,
 }
 @media only screen and (max-width: 640px) {	
 	.stats_cell.panel_label {
-		font-size: 16px;
+		font-size: 13px;
 		padding-bottom: 8px;
 	}
 	.stats_cell.panel_label:not(:last-child) {
@@ -1240,10 +1295,6 @@ svg path,
 	font-weight: 700;
 	letter-spacing: -.2px;
 }
-@media only screen and (max-width: 640px) {	
-	.stats_label {
-	}
-}
 .stats_value {
 	font-size: 20px;
 	text-align: right;
@@ -1251,6 +1302,7 @@ svg path,
 @media only screen and (max-width: 640px) {	
 	.stats_value {
 		text-align: center;
+		font-size: 15px;
 	}
 	.stats_value:not(:last-child) {
 		border-right: 1px solid black;

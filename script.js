@@ -89,7 +89,7 @@ const APPController = (function(UICtrl, APICtrl) {
     const DEVMODE = false;
     const PRODMODE = true;
     const DEFAULTANSWERSAMOUNT = 4;
-    const DIFFICULTYNAMES = ['Normal', 'Difficile', 'Infernal', 'Extrême'];
+    const DIFFICULTYNAMES = ['Normal', 'Difficile', 'Infernal', 'Extrême', 'Glitched'];
     var MINSTREAK = 3;
     var DEFAULTTRACKSBYGAME = 40;
     var TRACKSBYGAME = 40;
@@ -110,9 +110,16 @@ const APPController = (function(UICtrl, APICtrl) {
     var score = 0;
     var playedTracks = 0;
     var currentTrack = 0;
+    var currentAudioTime = 0;
+    var modifierRates = [.25, .33, .5, .66, .75, .87, 1, 1.25, 1.5, 2, 2.25, 2.5, 2.75, 3, 1];
+    var segmentDurations1 = [.5, 1, 1.5, 2];
+    var segmentDurations2 = [.5, 1];
+    var currentSegmentDurations = [];
     var z = String.fromCharCode;
     var audioPlayer = document.getElementById("audio_player");
+    var audioPlayerHardcore = document.getElementById("audio_player_hardcore");
     var jsAudioPlayer = $('.js-audio-player');
+    var jsAudioPlayerHardcore = $('.js-audio-player-hardcore');
     var soundRight = new Audio('assets/right.m4a');
     var soundWrong = new Audio('assets/wrong.m4a');
     // Data
@@ -187,6 +194,9 @@ const APPController = (function(UICtrl, APICtrl) {
         TRACKSBYGAME = setListLength;
         $('.js-track-total').text(setListLength);
         minScore = setListLength - setListLength / 5;
+
+        if(DIFFICULTYLEVEL >= 5)        
+            currentSegmentDurations = segmentDurations1;
     }
 
     function addToSetlist(player) {
@@ -245,7 +255,6 @@ const APPController = (function(UICtrl, APICtrl) {
         });
     }
 
-    // DOMInputs.playTrackButton.addEventListener('click', async (e) => {
     $('.js-play-track').on('click', function() {
         buildSetlist();
         $('.js-wrapper').removeClass('game_ended');
@@ -256,8 +265,6 @@ const APPController = (function(UICtrl, APICtrl) {
     });
 
     $('.js-replay-game').on('click', function() {
-        // $('.js-word').text('').hide();
-        // $('.js-not-enough').hide();
         resetGame();
         $('.js-wrapper').addClass('game_started');
         $('.js-score-wrapper').addClass('visible');
@@ -266,29 +273,18 @@ const APPController = (function(UICtrl, APICtrl) {
 
     $('.js-back-menu').on('click', function() {
         quitGame();
-        // $('.js-buttons-wrapper').addClass('visible');
         $('.js-wrapper').removeClass('game_started');
         $('.js-settings').addClass('visible');
     });
 
-    // Show settings
-    // $('.js-show-settings').on('click', function() {
-    //     $('.js-settings').addClass('visible');
-    //     $('.js-buttons-wrapper').removeClass('visible');
-    // });
-    // Hide settings
-    // $('.js-hide-settings').on('click', function() {
-    //     $('.js-settings').removeClass('visible');
-    //     $('.js-buttons-wrapper').addClass('visible');
-    // });
     // Quit game
     $('.js-quit-game').on('click', function() {
         isPlaying = false;
         audioPlayer.pause();
+        audioPlayerHardcore.pause();
         quitGame();
         $('.js-wrapper').removeClass('game_started');
         $('.js-settings').addClass('visible');
-        // $('.js-buttons-wrapper').addClass('visible');
     });
 
     // Set amount of tracks by game
@@ -299,21 +295,9 @@ const APPController = (function(UICtrl, APICtrl) {
         tracksByPlayer = Math.floor(TRACKSBYGAME / playersData.length);
     });
 
-    // Set amount of options by game
-    // $('.js-nb-options').on('keyup mouseup', function() {
-    //     if(+$(this).val() < +$(this).attr('min'))
-    //         $(this).val($(this).attr('min'));
-    //     else if(+$(this).val() > playersAmount)
-    //         $(this).val(playersAmount);
-    //     ANSWERSAMOUNT = +$(this).val();
-    //     POINTSBYANSWER = ANSWERSAMOUNT - DEFAULTANSWERSAMOUNT + 1;
-    //     if(POINTSBYANSWER > playersAmount - DEFAULTANSWERSAMOUNT + 1)
-    //         POINTSBYANSWER = playersAmount - DEFAULTANSWERSAMOUNT + 1;
-    // });
-
     // Set difficulty level
     $('.js-input-difficulty').on('change', function() {
-        var difficultyName = $(this).find('+ label').text();
+        var difficultyName = $(this).find('+ label .text_no_glitch').text();
         DIFFICULTYLEVEL = $(this).val();
         POINTSMULTIPLICATOR = DIFFICULTYLEVEL;
         $('.js-difficulty').text(difficultyName);
@@ -336,10 +320,16 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-like-button').toggleClass('visually_hidden', DIFFICULTYLEVEL > 2);
 
         // Answers display
-        DISPLAYAVATARS = DIFFICULTYLEVEL > 3;
+        DISPLAYAVATARS = DIFFICULTYLEVEL >= 4;
 
         // Answers amount
-        ANSWERSAMOUNT = DIFFICULTYLEVEL > 3 ? 8 : 4;
+        ANSWERSAMOUNT = DIFFICULTYLEVEL >= 4 ? 8 : 4;
+
+        // Audioplayer volume
+        audioPlayer.volume = DIFFICULTYLEVEL < 5 ? 1 : 0;
+        audioPlayerHardcore.volume = DIFFICULTYLEVEL < 5 ? 0 : 1;
+
+        $('body').toggleClass('glitched', DIFFICULTYLEVEL == 5);
     });
 
     const playTrack = async () => {
@@ -350,7 +340,6 @@ const APPController = (function(UICtrl, APICtrl) {
         playedTracks += 1;
         updateTrackNumber();
         // Track indexes
-        /*var index0 = Math.floor(Math.random() * totalTracks);*/
         var currentData = setList.shift();
         var index0 = currentData[1];
         var index = index0 + 1;
@@ -361,6 +350,7 @@ const APPController = (function(UICtrl, APICtrl) {
         // Track preview
         var trackPreview = "assets/previews/" + index + ".mp3";        
         jsAudioPlayer.attr('src', trackPreview);
+        jsAudioPlayerHardcore.attr('src', trackPreview);
         // Display track infos only if setting is set to true
         if(DISPLAYTRACKSINFOS) {
             // Track image
@@ -403,22 +393,50 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-answers').empty();
         for(i=0; i<answers.length; i++) {
             var answerElem = '';
+            var avatarSuffix = '';
+            if(DIFFICULTYLEVEL >= 5) {
+                // Display level 1 glitched avatar randomly
+                // The more the game progresses, the more likely avatars will be glitched
+                var percent = playedTracks <= 1 ? 0 : Math.floor((playedTracks-1) / (TRACKSBYGAME/2) * 100);
+                var rand = Math.floor(Math.random() * 100 + 1);
+                if(rand <= percent) {
+                    avatarSuffix = '-glitched';
+                    // display level 2 avatar if second half of the game has been reached
+                    if(playedTracks > TRACKSBYGAME/2) {
+                        var percent2 = Math.floor((playedTracks-(TRACKSBYGAME/2)-1) / (TRACKSBYGAME/2) * 100);
+                        var rand2 = Math.floor(Math.random() * 100);
+                        if(rand2 <= percent2)
+                            avatarSuffix = '-glitched2';
+                    }
+                }
+            }
             if(DISPLAYAVATARS)
-                answerElem = $('<li class="list_answers__item list_answers__item--avatar"><button class="list_answers__avatar js-answer" data-index="' + i + '"><img class="list_answers__img" src="assets/avatars/' + answers[i][0].toLowerCase() + '.png"/></button></li>');
+                answerElem = $('<li class="list_answers__item list_answers__item--avatar"><button class="list_answers__avatar js-answer" data-index="' + i + '"><img class="list_answers__img" src="assets/avatars/' + answers[i][0].toLowerCase() + avatarSuffix + '.png"/></button></li>');
             else
                 answerElem = $('<li class="list_answers__item"><button class="list_answers__name js-answer" data-index="' + i + '">' + answers[i][0] + '</button></li>');
             $('.js-answers').append(answerElem);
+            if(DIFFICULTYLEVEL == 5) {
+                document.body.style.setProperty('--glitchedOpacity', playedTracks/(TRACKSBYGAME-1));
+                $('body').toggleClass('glitched_halfgame', playedTracks > TRACKSBYGAME/2);
+            }
+
         }
         // Countdown
         $('.js-countdown').text(DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION);
-        // startCountdownBar();
         // Play track
-        if(DIFFICULTYLEVEL > 2) {
-            TRACKSTART = Math.floor(Math.random() * 24 - 0 + 1);
+        if(DIFFICULTYLEVEL >= 5) {
+            currentAudioTime = Math.floor(Math.random() * 29);
+            audioPlayerHardcore.currentTime = currentAudioTime;
+            audioPlayerHardcore.playbackRate = setPlaybackRate();
+        }
+        if(DIFFICULTYLEVEL >= 3) {
+            TRACKSTART = Math.floor(Math.random() * 24 + 1);
             audioPlayer.currentTime = TRACKSTART;
         }
         window.requestAnimationFrame(audioCountdown);
         audioPlayer.play();
+        if(DIFFICULTYLEVEL >= 5)
+            audioPlayerHardcore.play();
         isPlaying = true;        
         $('.js-answers').addClass('playing');
     }
@@ -429,6 +447,7 @@ const APPController = (function(UICtrl, APICtrl) {
             return;
         isPlaying = false;
         audioPlayer.pause();
+        audioPlayerHardcore.pause();
         $('.js-answers').removeClass('playing');
         var answerIndex = that.attr('data-index');
         var [name, result] = answers[answerIndex];
@@ -447,7 +466,9 @@ const APPController = (function(UICtrl, APICtrl) {
             if(streakBonus > 0)
                 $('.js-streak-wrapper').addClass('active');
             $('.js-streak').text(streakBonus > 0 ? streakBonus : '');
-            updateScore(POINTSBYANSWER * POINTSMULTIPLICATOR);            
+            updateScore(POINTSBYANSWER * POINTSMULTIPLICATOR);
+            if(!DIFFICULTYNAMES[DIFFICULTYLEVEL-1] in playerData.good_answers || playerData.good_answers[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] == null)
+                playerData.good_answers[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] = 0;      
         	playerData.good_answers[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] += 1;
         }
         else {
@@ -455,6 +476,8 @@ const APPController = (function(UICtrl, APICtrl) {
                 updateAssignedTracks(name, currentTrack);
             playSound(soundWrong);
             that.addClass('incorrect');
+            if(!DIFFICULTYNAMES[DIFFICULTYLEVEL-1] in playerData.wrong_answers || playerData.wrong_answers[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] == null)
+                playerData.wrong_answers[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] = 0; 
         	playerData.wrong_answers[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] += 1;
             resetStreak();
         }
@@ -476,11 +499,12 @@ const APPController = (function(UICtrl, APICtrl) {
     });
 
     jsAudioPlayer.on('timeupdate', function(event) {
-        if((DIFFICULTYLEVEL > 2  && audioPlayer.currentTime >= TRACKSTART + HARDCOREMODETRACKDURATION)
+        if((DIFFICULTYLEVEL >= 3  && audioPlayer.currentTime >= TRACKSTART + HARDCOREMODETRACKDURATION)
          || DIFFICULTYLEVEL <= 2 && audioPlayer.currentTime >= audioPlayer.duration) {
             $('.js-countdown').text(0);
             isPlaying = false;
             audioPlayer.pause();
+            audioPlayerHardcore.pause();
             audioPlayer.currentTime = 0;
             $('.js-answers').removeClass('playing');
             playSound(soundWrong);
@@ -489,16 +513,32 @@ const APPController = (function(UICtrl, APICtrl) {
             nextTrack();
         }
         else if(isPlaying) {
-            // audioPlayer.volume = 0;
-            audioPlayer.play();
+            if(DIFFICULTYLEVEL >= 5 && audioPlayerHardcore.currentTime >= currentAudioTime + (currentSegmentDurations[0] * audioPlayerHardcore.playbackRate)) {
+                var percent = playedTracks <= 1 ? 0 : Math.floor((playedTracks-1) / (TRACKSBYGAME/2) * 100);
+                var rand = Math.floor(Math.random() * 100 + 1);
+                if(rand <= percent) {
+                    currentSegmentDurations = playedTracks-1 >= TRACKSBYGAME/2 ? shuffleArray(segmentDurations2) : shuffleArray(segmentDurations1);
+                    currentAudioTime = Math.floor(Math.random() * 29);
+                    audioPlayerHardcore.playbackRate = setPlaybackRate();
+                    audioPlayerHardcore.currentTime = currentAudioTime;
+                }
+                else {
+                    currentAudioTime = audioPlayerHardcore.currentTime;
+                }
+            }
         }
+    });
+
+    jsAudioPlayerHardcore.on('timeupdate', function(event) {
+        if(isPlaying && audioPlayerHardcore.currentTime < 1)
+            currentAudioTime = 0;
     });
 
     function audioCountdown() {
         var timer = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - Math.floor(audioPlayer.currentTime) : TRACKSTART + HARDCOREMODETRACKDURATION - Math.floor(audioPlayer.currentTime);
-        $('.js-countdown').text(timer);
-        if(timer == 0)
+        if(timer <= 0)
             return;
+        $('.js-countdown').text(timer);
         if(isPlaying) {
             var currentDuration = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION;
             var currentCoundtown = DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION - audioPlayer.currentTime : TRACKSTART + HARDCOREMODETRACKDURATION - audioPlayer.currentTime;
@@ -553,7 +593,7 @@ const APPController = (function(UICtrl, APICtrl) {
                 for(var currendScore in scores) {
                     var [difficulty, tracks, points] = scores[currendScore];
                     // Build custom leaderboard
-                    if(tracks > DEFAULTTRACKSBYGAME) {
+                    if(tracks != DEFAULTTRACKSBYGAME) {
                         if(!(name in leaderboardCustom[difficulty]))
                             leaderboardCustom[difficulty][name] = [name, tracks, points];
                         else if(leaderboardCustom[difficulty][name][2] < points)
@@ -622,8 +662,6 @@ const APPController = (function(UICtrl, APICtrl) {
         	var resultObject = {};
         	var likedTracks = result;
         	var hasLikes = false;
-        	// console.log(likedTracks);
-        	// console.log(playerData);
 
         	for(var index in likedTracks) {
         		var row = likedTracks[index];
@@ -717,13 +755,18 @@ const APPController = (function(UICtrl, APICtrl) {
     function resetCountdownBar(value = '100%', transition = 0) {
         $('.js-countdown-bar').css('width', value);
         $('.js-countdown-bar').attr('data-timer', DIFFICULTYLEVEL <= 2 ? DEFAULTTRACKDURATION : HARDCOREMODETRACKDURATION);
+        $('.js-countdown').text(0);
     }
 
-    function startCountdownBar() {
-        // setTimeout(function() {
-            // $('.js-countdown-bar').css('transition', 'all linear 1s');
-            // $('.js-countdown-bar').css('width', '0%');
-        // }, 1);
+    function setPlaybackRate() {
+        var rate = 1;
+        var percent = playedTracks <= 1 ? 0 : Math.floor((playedTracks-1) / TRACKSBYGAME * 100);
+        var rand = Math.floor(Math.random() * 100 + 1);
+        if(rand <= percent) {
+            modifierRates = shuffleArray(modifierRates);
+            rate = modifierRates[0];
+        }
+        return rate;
     }
 
     function login() {
@@ -796,6 +839,8 @@ const APPController = (function(UICtrl, APICtrl) {
         playerData.scores.push([DIFFICULTYNAMES[DIFFICULTYLEVEL-1], TRACKSBYGAME, score]);
         updateScores(playerData.scores);
         // Update games played
+        if(!DIFFICULTYNAMES[DIFFICULTYLEVEL-1] in playerData.games_played || playerData.games_played[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] == null)
+            playerData.games_played[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] = 0;
         playerData.games_played[DIFFICULTYNAMES[DIFFICULTYLEVEL-1]] += 1;
         updateStatsGamesPlayed();
         updateGamesPlayed(playerData.games_played);
@@ -807,6 +852,10 @@ const APPController = (function(UICtrl, APICtrl) {
         $('.js-wrapper').removeClass('game_started');
         $('.js-wrapper').addClass('game_ended');
         $('.js-score-wrapper').removeClass('visible');
+        if(DIFFICULTYLEVEL == 5) {
+            document.body.style.setProperty('--glitchedOpacity', 0);
+            $('body').removeClass('glitched_halfgame');
+        }
     }
 
     function shuffleArray(array) {
@@ -903,10 +952,15 @@ const APPController = (function(UICtrl, APICtrl) {
         playedTracks = 0;
         playersDataBuild = JSON.parse(JSON.stringify(playersData));
         $('.js-wrapper').removeClass('game_ended');
-        $('.js-score-wrapper').removeClass('visible');
+        $('.js-score-wrapper').removeClass('visible');        
+        if(DIFFICULTYLEVEL == 5) {
+            document.body.style.setProperty('--glitchedOpacity', 0);
+            $('body').removeClass('glitched_halfgame');
+        }
     }
 
     function openLeaderboard() {
+        $('body.glitched').addClass('no_glitch');
         $('.js-settings').removeClass('visible');
         $('.js-leaderboard').addClass('visible');
         $('.js-close-leaderboard').addClass('visible');
@@ -916,6 +970,7 @@ const APPController = (function(UICtrl, APICtrl) {
     }
 
     function closeLeaderboard() {
+        $('body.glitched').removeClass('no_glitch');
         $('.js-settings').addClass('visible');
         $('.js-leaderboard').removeClass('visible');
         $('.js-close-leaderboard').removeClass('visible');

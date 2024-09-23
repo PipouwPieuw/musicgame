@@ -660,6 +660,10 @@ const APPController = (function(UICtrl, APICtrl) {
 
         // Build liked tracks
         getLikedTracks().then(function(result) {
+        	if(!('tracks' in playerData)) {
+        		$('.js-liked-tracks-wrapper').addClass('visually_hidden');
+        		return;        		
+        	}
         	var resultObject = {};
         	var likedTracks = result;
         	var hasLikes = false;
@@ -715,6 +719,10 @@ const APPController = (function(UICtrl, APICtrl) {
 
         // Build assigned tracks
         getAssignedTracks(playerData.initials).then(function(result) {
+        	if(result.length == 0) {
+                $('.js-assigned-tracks-wrapper').addClass('visually_hidden');
+                return;
+            }
             var assignedTracks = result[0].assigned_tracks;
             var assignedTracksSorted = [];
             var assignedTracksPodium = {};

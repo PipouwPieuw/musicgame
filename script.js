@@ -672,13 +672,13 @@ const APPController = (function(UICtrl, APICtrl) {
         		var row = likedTracks[index];
         		if(row.likedTracks == null)
         			continue;
-        		var hasLikes = true;
         		for(var trackIndex in row.likedTracks) {
         			if(playerData.tracks.includes(row.likedTracks[trackIndex])) {
         				if (row.likedTracks[trackIndex] in resultObject)
         					resultObject[row.likedTracks[trackIndex]].push(row.initials);
         				else
         					resultObject[row.likedTracks[trackIndex]] = [row.initials];
+        				var hasLikes = true;
         			}
         		}
         	}
@@ -739,8 +739,15 @@ const APPController = (function(UICtrl, APICtrl) {
             for(var i=1;i<=3;i++) {
                 var assignedTrack = assignedTracksSorted.shift();
                 assignedTracksPodium[i] = [assignedTrack];
-                while(assignedTracksSorted[0][1] == assignedTrack[1])
+                if(assignedTracksSorted.length == 0)
+                	break;
+                while(assignedTracksSorted[0][1] == assignedTrack[1]) {
                     assignedTracksPodium[i].push(assignedTracksSorted.shift());
+                    if(assignedTracksSorted.length == 0)
+                    	break;
+                }
+                if(assignedTracksSorted.length == 0)
+                   	break;
             }
             for(var position in assignedTracksPodium) {
                 var assignedTrackRow = $('<div class="assigned_tracks_row"></div>');

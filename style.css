@@ -1333,6 +1333,12 @@ body.no_glitch .text_glitch {
 	text-align: center;
 	margin-top: 15px;
 }
+@media only screen and (max-width: 640px) {	
+	.leaderboard__section_title {
+		font-size: 22px;
+	}
+}
+
 .leaderboard__title {
 	display: block;
 	margin-bottom: 10px;
@@ -1454,8 +1460,8 @@ body.no_glitch .text_glitch {
 @media only screen and (max-width: 640px) {	
 	.panel_tabs__tab {
 		flex: 1;
-		font-size: 16px;
-		padding: 0 12px;
+		font-size: 14px;
+		padding: 0 10px;
 	}
 }
 .panel_tabs__section:not(.active) {
@@ -1509,4 +1515,27 @@ body.no_glitch .text_glitch {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+}
+
+/* Trophies  */
+.trophy__details {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.trophy__image {
+	flex: 0 0 100px;
+	height: 100px;	
+}
+.trophy__image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.trophy__value {
+	margin-top: 10px;
+	font-size: 18px;
+}
+.trophy__value span {
+	font-weight: 700;
 }

@@ -580,17 +580,18 @@ const APPController = (function(UICtrl, APICtrl) {
 
         // Build leaderboard
         getAllScores().then(function(result) {
+        	var allScores = result;
             var leaderboard = {}
             var leaderboardCustom = {}
             for(var difficulty in DIFFICULTYNAMES) {
                 leaderboard[DIFFICULTYNAMES[difficulty]]= {};
                 leaderboardCustom[DIFFICULTYNAMES[difficulty]]= {};
             }
-            for(var element in result) {
-                var scores = result[element].scores;
+            for(var element in allScores) {
+                var scores = allScores[element].scores;
                 if(scores == null)
                     continue;
-                var name = result[element].name;
+                var name = allScores[element].name;
                 for(var currendScore in scores) {
                     var [difficulty, tracks, points] = scores[currendScore];
                     // Build custom leaderboard
@@ -624,6 +625,7 @@ const APPController = (function(UICtrl, APICtrl) {
             	difficultyTable.sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
             	leaderboard[DIFFICULTYNAMES[difficulty]] = difficultyTable;
             }
+
             // Display leaderboard
             buildLeaderboard(leaderboard, "Classement parties classiques");
             buildLeaderboard(leaderboardCustom, "Classement parties personnalisées");
@@ -782,6 +784,25 @@ const APPController = (function(UICtrl, APICtrl) {
                 $('.js-assigned-tracks-wrapper').removeClass('visually_hidden');
             }
         });
+
+        // Build trophies
+        getAllProfiles().then(function(result) {
+        	var gamesPlayed = [];
+
+        	for(var i in result) {
+        		var player = result[i];
+        		var totalGames = 0;
+        		for(var j in player.games_played)
+        			totalGames += player.games_played[j]
+        		gamesPlayed[i] = [player.initials, totalGames];
+        	}
+        	gamesPlayed.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
+        	$('.js-trophy-most-games').attr('src', 'assets/avatars/' + gamesPlayed[0][0] + '.png');
+        	$('.js-trophy-most-games-value').text(gamesPlayed[0][1]);
+        	$('.js-trophy-less-games').attr('src', 'assets/avatars/' + gamesPlayed[gamesPlayed.length-1][0] + '.png');
+        	$('.js-trophy-less-games-value').text(gamesPlayed[gamesPlayed.length-1][1]);
+        });
+
     });
 
     $('.js-close-leaderboard').on('click', function() {
@@ -1131,6 +1152,17 @@ async function getAssignedTracks(initials) {
         .from("names")
         .select('assigned_tracks')
         .eq('initials', initials);
+    if(error != null)
+        console.log(error);
+    if(data == null)
+        data = {};
+    return data;
+}
+
+async function getAllProfiles() {
+    const { data, error } = await _supabase
+        .from("profiles")
+        .select('*');
     if(error != null)
         console.log(error);
     if(data == null)

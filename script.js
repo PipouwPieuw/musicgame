@@ -753,7 +753,14 @@ const APPController = (function(UICtrl, APICtrl) {
         	var answersRatio = [];
 	        var totalScoresArray = [];
 	        var mostLikedTracks = [];
-	        var lessLikedTracks = [];
+            var lessLikedTracks = [];
+            var allFavorites = {};
+            var allFavoritesArray = [];
+	        var mostFavorited = [];
+            var totalFavorited = {};
+            var totalFavoritedArray = [];
+            var ownFavorited = {};
+            var ownFavoritedArray = [];
         	// Build data
         	for(var i in result) {
         		var player = result[i];
@@ -772,12 +779,27 @@ const APPController = (function(UICtrl, APICtrl) {
         			wrongAnswers += player.wrong_answers[j]
         		answersPercent = Math.ceil(goodAnswers / (goodAnswers + wrongAnswers) * 100) || 0;
         		answersRatio[i] = [player.initials, answersPercent];
-        		// Favorites
         		if(player.likedTracks != null) {
+                    // Favorites
         			if(mostLikedTracks.length == 0 || mostLikedTracks[1] < player.likedTracks.length)
         				mostLikedTracks = [player.initials, player.likedTracks.length];
         			if(lessLikedTracks.length == 0 || lessLikedTracks[1] > player.likedTracks.length)
         				lessLikedTracks = [player.initials, player.likedTracks.length];
+                    // Own favorited 1/2                      
+                    if(!(player.initials in ownFavorited))
+                        ownFavorited[player.initials] = 0
+                    for(var i in player.likedTracks) {
+                        // Most favorited
+                        if(!(player.likedTracks[i] in allFavorites))
+                            allFavorites[player.likedTracks[i]] = 1;
+                        else
+                            allFavorites[player.likedTracks[i]] += 1;;
+                        // Own favorited 2/2
+                        for(var j in playersData) {
+                            if(playersData[j][2] == player.initials && playersData[j][1].indexOf(player.likedTracks[i]) >= 0)
+                                ownFavorited[player.initials] += 1;
+                        }
+                    }
         		}
         	}
         	// Display data
@@ -796,6 +818,44 @@ const APPController = (function(UICtrl, APICtrl) {
         	$('.js-trophy-most-favorites-value').text(mostLikedTracks[1]);
         	$('.js-trophy-less-favorites').attr('src', 'assets/avatars/' + lessLikedTracks[0] + '.png');
         	$('.js-trophy-less-favorites-value').text(lessLikedTracks[1]);
+            // Most favorited
+            for(var i in allFavorites)
+                allFavoritesArray.push([i, allFavorites[i]]);
+            allFavoritesArray.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
+            var mostFavoritedInitials = "";
+            var mostFavoritedIndex = -1;
+            for(var i in playersData) {
+                if(playersData[i][1].indexOf(parseInt(allFavoritesArray[0][0])) >= 0) {
+                    mostFavoritedInitials = playersData[i][2];
+                    mostFavoritedIndex = parseInt(allFavoritesArray[0][0]);
+                }
+            }
+            $('.js-trophy-most-favorited').attr('src', 'assets/avatars/' + mostFavoritedInitials + '.png');
+            $('.js-trophy-most-favorited-value').text(allFavoritesArray[0][1]);
+            // Most and less favorited total
+            for(var i in playersData) {
+                for(var j in playersData[i][1]) {
+                    if(!(playersData[i][2] in totalFavorited))
+                        totalFavorited[playersData[i][2]] = 0;
+                    if(playersData[i][1][j] in allFavorites) {
+                        totalFavorited[playersData[i][2]] += allFavorites[playersData[i][1][j]];
+                        
+                    }
+                }
+            }
+            for(var i in totalFavorited)
+                totalFavoritedArray.push([i, totalFavorited[i]]);
+            totalFavoritedArray.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
+            $('.js-trophy-total-favorited').attr('src', 'assets/avatars/' + totalFavoritedArray[0][0] + '.png');
+            $('.js-trophy-total-favorited-value').text(totalFavoritedArray[0][1]);
+            $('.js-trophy-less-total-favorited').attr('src', 'assets/avatars/' + totalFavoritedArray[totalFavoritedArray.length-1][0] + '.png');
+            $('.js-trophy-less-total-favorited-value').text(totalFavoritedArray[totalFavoritedArray.length-1][1]);
+            // Own favorites
+            for(var i in ownFavorited)
+                ownFavoritedArray.push([i, ownFavorited[i]]);
+            ownFavoritedArray.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
+            $('.js-trophy-own-favorited').attr('src', 'assets/avatars/' + ownFavoritedArray[0][0] + '.png');
+            $('.js-trophy-own-favorited-value').text(ownFavoritedArray[0][1]);
 
         	// Best and worst scores        	
         	getAllScores().then(function(result) {

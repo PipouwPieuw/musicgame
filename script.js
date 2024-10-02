@@ -752,6 +752,8 @@ const APPController = (function(UICtrl, APICtrl) {
         	var gamesPlayed = [];
         	var answersRatio = [];
 	        var totalScoresArray = [];
+	        var mostLikedTracks = [];
+	        var lessLikedTracks = [];
         	// Build data
         	for(var i in result) {
         		var player = result[i];
@@ -770,6 +772,13 @@ const APPController = (function(UICtrl, APICtrl) {
         			wrongAnswers += player.wrong_answers[j]
         		answersPercent = Math.ceil(goodAnswers / (goodAnswers + wrongAnswers) * 100) || 0;
         		answersRatio[i] = [player.initials, answersPercent];
+        		// Favorites
+        		if(player.likedTracks != null) {
+        			if(mostLikedTracks.length == 0 || mostLikedTracks[1] < player.likedTracks.length)
+        				mostLikedTracks = [player.initials, player.likedTracks.length];
+        			if(lessLikedTracks.length == 0 || lessLikedTracks[1] > player.likedTracks.length)
+        				lessLikedTracks = [player.initials, player.likedTracks.length];
+        		}
         	}
         	// Display data
         	// Most / less games played
@@ -782,6 +791,11 @@ const APPController = (function(UICtrl, APICtrl) {
         	answersRatio.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
         	$('.js-trophy-precision').attr('src', 'assets/avatars/' + answersRatio[0][0] + '.png');
         	$('.js-trophy-precision-value').text(answersRatio[0][1]);
+        	// Favorites
+        	$('.js-trophy-most-favorites').attr('src', 'assets/avatars/' + mostLikedTracks[0] + '.png');
+        	$('.js-trophy-most-favorites-value').text(mostLikedTracks[1]);
+        	$('.js-trophy-less-favorites').attr('src', 'assets/avatars/' + lessLikedTracks[0] + '.png');
+        	$('.js-trophy-less-favorites-value').text(lessLikedTracks[1]);
 
         	// Best and worst scores        	
         	getAllScores().then(function(result) {

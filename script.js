@@ -586,46 +586,8 @@ const APPController = (function(UICtrl, APICtrl) {
             for(var difficulty in DIFFICULTYNAMES) {
                 leaderboard[DIFFICULTYNAMES[difficulty]]= {};
                 leaderboardCustom[DIFFICULTYNAMES[difficulty]]= {};
-            }
-            for(var element in allScores) {
-                var scores = allScores[element].scores;
-                if(scores == null)
-                    continue;
-                var name = allScores[element].name;
-                for(var currendScore in scores) {
-                    var [difficulty, tracks, points] = scores[currendScore];
-                    // Build custom leaderboard
-                    if(tracks != DEFAULTTRACKSBYGAME) {
-                        if(!(name in leaderboardCustom[difficulty]))
-                            leaderboardCustom[difficulty][name] = [name, tracks, points];
-                        else if(leaderboardCustom[difficulty][name][2] < points)
-                            leaderboardCustom[difficulty][name] = [name, tracks, points];                        
-                    }
-                    // Build default leaderboard
-                    else {
-                        if(!(name in leaderboard[difficulty]))
-                            leaderboard[difficulty][name] = [name, tracks, points];
-                        else if(leaderboard[difficulty][name][2] < points)
-                            leaderboard[difficulty][name] = [name, tracks, points];
-                    }
-                }
-            }
-            // Keep only best score for each player
-            for(var difficulty in DIFFICULTYNAMES) {
-                // Leaderboard custom
-                var difficultyTableCustom = [];
-                for(var playerName in leaderboardCustom[DIFFICULTYNAMES[difficulty]])
-                    difficultyTableCustom.push(leaderboardCustom[DIFFICULTYNAMES[difficulty]][playerName]);
-                difficultyTableCustom.sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
-                leaderboardCustom[DIFFICULTYNAMES[difficulty]] = difficultyTableCustom;                
-                // Leaderboard default
-                var difficultyTable = [];
-            	for(var playerName in leaderboard[DIFFICULTYNAMES[difficulty]])
-            		difficultyTable.push(leaderboard[DIFFICULTYNAMES[difficulty]][playerName]);
-            	difficultyTable.sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
-            	leaderboard[DIFFICULTYNAMES[difficulty]] = difficultyTable;
-            }
-
+            }            
+            [leaderboard, leaderboardCustom] = returnBestScores(allScores, leaderboard, leaderboardCustom);
             // Display leaderboard
             buildLeaderboard(leaderboard, "Classement parties classiques");
             buildLeaderboard(leaderboardCustom, "Classement parties personnalisées");
@@ -789,6 +751,7 @@ const APPController = (function(UICtrl, APICtrl) {
         getAllProfiles().then(function(result) {
         	var gamesPlayed = [];
         	var answersRatio = [];
+	        var totalScoresArray = [];
         	// Build data
         	for(var i in result) {
         		var player = result[i];
@@ -819,6 +782,39 @@ const APPController = (function(UICtrl, APICtrl) {
         	answersRatio.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
         	$('.js-trophy-precision').attr('src', 'assets/avatars/' + answersRatio[0][0] + '.png');
         	$('.js-trophy-precision-value').text(answersRatio[0][1]);
+
+        	// Best and worst scores        	
+        	getAllScores().then(function(result) {
+	        	var allScores = result;
+	            var leaderboard = {}
+	            var leaderboardCustom = {}
+	            var totalScores = {};
+	            for(var difficulty in DIFFICULTYNAMES) {
+	                leaderboard[DIFFICULTYNAMES[difficulty]]= {};
+	                leaderboardCustom[DIFFICULTYNAMES[difficulty]]= {};
+	            }            
+	            [leaderboard, leaderboardCustom] = returnBestScores(allScores, leaderboard, leaderboardCustom);
+	            for(var i in leaderboard) {
+	            	for(var j in leaderboard[i]) {
+	            		var initials = leaderboard[i][j][3];
+	            		if(!(initials in totalScores)) 
+	            			totalScores[leaderboard[i][j][3]] = leaderboard[i][j][2];
+	            		else
+		            		totalScores[leaderboard[i][j][3]] += leaderboard[i][j][2];
+	            	}
+	            }
+	            var counter = 0;
+	            for(var i in totalScores) {
+	            	totalScoresArray[counter] = [i, totalScores[i]];
+	            	counter += 1;
+	            }
+	        	// Display data 
+	        	totalScoresArray.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
+	        	$('.js-trophy-best-scores').attr('src', 'assets/avatars/' + totalScoresArray[0][0] + '.png');
+	        	$('.js-trophy-best-scores-value').text(totalScoresArray[0][1]);  
+	        	$('.js-trophy-worst-scores').attr('src', 'assets/avatars/' + totalScoresArray[totalScoresArray.length-1][0] + '.png');
+	        	$('.js-trophy-worst-scores-value').text(totalScoresArray[totalScoresArray.length-1][1]);  
+	        });     	    
         });
 
     });
@@ -966,6 +962,50 @@ const APPController = (function(UICtrl, APICtrl) {
             document.body.style.setProperty('--glitchedOpacity', 0);
             $('body').removeClass('glitched_halfgame');
         }
+    }
+
+    function returnBestScores(allScores, leaderboard, leaderboardCustom) {
+    	for(var element in allScores) {
+            var scores = allScores[element].scores;
+            if(scores == null)
+                continue;
+            var name = allScores[element].name;
+            var initials = allScores[element].initials;
+            for(var currentScore in scores) {
+                var [difficulty, tracks, points] = scores[currentScore];
+                // Build custom leaderboard
+                if(tracks != DEFAULTTRACKSBYGAME) {
+                    if(!(name in leaderboardCustom[difficulty]))
+                        leaderboardCustom[difficulty][name] = [name, tracks, points, initials];
+                    else if(leaderboardCustom[difficulty][name][2] < points)
+                        leaderboardCustom[difficulty][name] = [name, tracks, points, initials];                        
+                }
+                // Build default leaderboard
+                else {
+                    if(!(name in leaderboard[difficulty]))
+                        leaderboard[difficulty][name] = [name, tracks, points, initials];
+                    else if(leaderboard[difficulty][name][2] < points)
+                        leaderboard[difficulty][name] = [name, tracks, points, initials];
+                }
+            }
+        }
+        // Keep only best score for each player
+        for(var difficulty in DIFFICULTYNAMES) {
+            // Leaderboard custom
+            var difficultyTableCustom = [];
+            for(var playerName in leaderboardCustom[DIFFICULTYNAMES[difficulty]])
+                difficultyTableCustom.push(leaderboardCustom[DIFFICULTYNAMES[difficulty]][playerName]);
+            difficultyTableCustom.sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
+            leaderboardCustom[DIFFICULTYNAMES[difficulty]] = difficultyTableCustom;                
+            // Leaderboard default
+            var difficultyTable = [];
+        	for(var playerName in leaderboard[DIFFICULTYNAMES[difficulty]])
+        		difficultyTable.push(leaderboard[DIFFICULTYNAMES[difficulty]][playerName]);
+        	difficultyTable.sort((a,b) => (a[2] < b[2]) ? 1 : ((b[2] < a[2]) ? -1 : 0));
+        	leaderboard[DIFFICULTYNAMES[difficulty]] = difficultyTable;
+        }
+
+        return [leaderboard, leaderboardCustom];
     }
 
     function shuffleArray(array) {

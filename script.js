@@ -788,19 +788,37 @@ const APPController = (function(UICtrl, APICtrl) {
         // Build trophies
         getAllProfiles().then(function(result) {
         	var gamesPlayed = [];
-
+        	var answersRatio = [];
+        	// Build data
         	for(var i in result) {
         		var player = result[i];
         		var totalGames = 0;
+        		// Most / less games played
         		for(var j in player.games_played)
         			totalGames += player.games_played[j]
         		gamesPlayed[i] = [player.initials, totalGames];
+        		// Best good answers ratio
+	        	var goodAnswers = 0;
+	        	var wrongAnswers = 0;
+	        	var answersPercent = 0;
+        		for(var j in player.good_answers)
+        			goodAnswers += player.good_answers[j]
+        		for(var j in player.wrong_answers)
+        			wrongAnswers += player.wrong_answers[j]
+        		answersPercent = Math.ceil(goodAnswers / (goodAnswers + wrongAnswers) * 100) || 0;
+        		answersRatio[i] = [player.initials, answersPercent];
         	}
+        	// Display data
+        	// Most / less games played
         	gamesPlayed.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
         	$('.js-trophy-most-games').attr('src', 'assets/avatars/' + gamesPlayed[0][0] + '.png');
         	$('.js-trophy-most-games-value').text(gamesPlayed[0][1]);
         	$('.js-trophy-less-games').attr('src', 'assets/avatars/' + gamesPlayed[gamesPlayed.length-1][0] + '.png');
         	$('.js-trophy-less-games-value').text(gamesPlayed[gamesPlayed.length-1][1]);
+        	// Best good answers ratio
+        	answersRatio.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
+        	$('.js-trophy-precision').attr('src', 'assets/avatars/' + answersRatio[0][0] + '.png');
+        	$('.js-trophy-precision-value').text(answersRatio[0][1]);
         });
 
     });

@@ -1534,8 +1534,9 @@ body.no_glitch .text_glitch {
 }
 .trophy__value {
 	margin-top: 10px;
-	font-size: 18px;
+	font-size: 14px;
 }
 .trophy__value span {
+	font-size: 18px;
 	font-weight: 700;
 }

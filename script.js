@@ -770,15 +770,17 @@ const APPController = (function(UICtrl, APICtrl) {
         			totalGames += player.games_played[j]
         		gamesPlayed[i] = [player.initials, totalGames];
         		// Best good answers ratio
-	        	var goodAnswers = 0;
-	        	var wrongAnswers = 0;
-	        	var answersPercent = 0;
-        		for(var j in player.good_answers)
-        			goodAnswers += player.good_answers[j]
-        		for(var j in player.wrong_answers)
-        			wrongAnswers += player.wrong_answers[j]
-        		answersPercent = Math.ceil(goodAnswers / (goodAnswers + wrongAnswers) * 100) || 0;
-        		answersRatio[i] = [player.initials, answersPercent];
+        		if(totalGames > 0) {
+		        	var goodAnswers = 0;
+		        	var wrongAnswers = 0;
+		        	var answersPercent = 0;
+	        		for(var j in player.good_answers)
+	        			goodAnswers += player.good_answers[j]
+	        		for(var j in player.wrong_answers)
+	        			wrongAnswers += player.wrong_answers[j]
+	        		answersPercent = Math.ceil(goodAnswers / (goodAnswers + wrongAnswers) * 100) || 0;
+	        		answersRatio.push([player.initials, answersPercent]);
+	        	}
         		if(player.likedTracks != null) {
                     // Favorites
         			if(mostLikedTracks.length == 0 || mostLikedTracks[1] < player.likedTracks.length)
@@ -809,10 +811,12 @@ const APPController = (function(UICtrl, APICtrl) {
         	$('.js-trophy-most-games-value').text(gamesPlayed[0][1]);
         	$('.js-trophy-less-games').attr('src', 'assets/avatars/' + gamesPlayed[gamesPlayed.length-1][0] + '.png');
         	$('.js-trophy-less-games-value').text(gamesPlayed[gamesPlayed.length-1][1]);
-        	// Best good answers ratio
+        	// Best / worst good answers ratio
         	answersRatio.sort((a,b) => (a[1] < b[1]) ? 1 : ((b[1] < a[1]) ? -1 : 0));
         	$('.js-trophy-precision').attr('src', 'assets/avatars/' + answersRatio[0][0] + '.png');
         	$('.js-trophy-precision-value').text(answersRatio[0][1]);
+        	$('.js-trophy-less-precision').attr('src', 'assets/avatars/' + answersRatio[answersRatio.length-1][0] + '.png');
+        	$('.js-trophy-less-precision-value').text(answersRatio[answersRatio.length-1][1]);
         	// Favorites
         	$('.js-trophy-most-favorites').attr('src', 'assets/avatars/' + mostLikedTracks[0] + '.png');
         	$('.js-trophy-most-favorites-value').text(mostLikedTracks[1]);

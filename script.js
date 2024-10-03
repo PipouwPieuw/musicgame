@@ -761,6 +761,7 @@ const APPController = (function(UICtrl, APICtrl) {
             var totalFavoritedArray = [];
             var ownFavorited = {};
             var ownFavoritedArray = [];
+            var mostAssignedtrack = [];
         	// Build data
         	for(var i in result) {
         		var player = result[i];
@@ -892,7 +893,45 @@ const APPController = (function(UICtrl, APICtrl) {
 	        	$('.js-trophy-best-scores-value').text(totalScoresArray[0][1]);  
 	        	$('.js-trophy-worst-scores').attr('src', 'assets/avatars/' + totalScoresArray[totalScoresArray.length-1][0] + '.png');
 	        	$('.js-trophy-worst-scores-value').text(totalScoresArray[totalScoresArray.length-1][1]);  
-	        });     	    
+	        });
+
+	        // Assigned tracks
+	        getGameAllData().then(function(result) {
+	        	var allData = result;
+	        	var resObject = {};
+	        	var resArray = [];
+	        	// Loop players
+	        	for(var i in allData) {
+	        		var player = allData[i];
+	        		resObject[player[2]] = {};
+	        		// Loop assigned tracks
+	        		for(var j in player[3]) {
+	        			var [assignedTrack, amount] = [j, player[3][j]];
+	        			// Loop other players to find assigned track owner
+	        			for(var k in allData) {
+	        				var otherPlayer = allData[k];
+	        				if(otherPlayer[1].indexOf(parseInt(assignedTrack)) >= 0) {
+	        					if(!(otherPlayer[0] in resObject[player[2]]))
+	        						resObject[player[2]][otherPlayer[0]] = amount;
+	        					else 
+	        						resObject[player[2]][otherPlayer[0]] += amount;
+	        					break;
+	        				}
+	        			}
+	        		}
+	        		// Search for max
+	        		for(var j in resObject[player[2]]) {
+	        			var current = resObject[player[2]][j];
+	        			if(resArray.length == 0 || resArray[2] < current) {
+	        				resArray = [player[2], j, current];
+	        			}
+	        		}
+	        	}
+	        	mostAssignedtrack = resArray;
+	        	$('.js-trophy-assigned').attr('src', 'assets/avatars/' + mostAssignedtrack[0] + '.png');
+	        	$('.js-trophy-assigned-name').text(mostAssignedtrack[1]);
+	        	$('.js-trophy-assigned-value').text(mostAssignedtrack[2]);
+	        });
         });
 
     });
@@ -1229,6 +1268,16 @@ async function getGameData() {
     var res = [];
     for(elem in data)
         res.push([data[elem].name, data[elem].tracks, data[elem].initials]);
+    return res;
+}
+
+async function getGameAllData() {
+    const { data, error } = await _supabase
+        .from('names')
+        .select('*');
+    var res = [];
+    for(elem in data)
+        res.push([data[elem].name, data[elem].tracks, data[elem].initials, data[elem].assigned_tracks]);
     return res;
 }
 

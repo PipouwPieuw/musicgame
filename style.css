@@ -1536,7 +1536,7 @@ body.no_glitch .text_glitch {
 	margin-top: 10px;
 	font-size: 14px;
 }
-.trophy__value span {
+.trophy__value span:not(.fw_normal) {
 	font-size: 18px;
 	font-weight: 700;
 }
